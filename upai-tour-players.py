@@ -6,7 +6,7 @@ import os
 
 # Obtain this from https://upai.usetopscore.com/u/oauth-key
 CLIENT_ID = os.getenv('UPAI_CLIENT_ID')
-CLIENT_SECRET = os.getenv('UPAI_CLIENT_SECRET') 
+CLIENT_SECRET = os.getenv('UPAI_CLIENT_SECRET')
 BASE_URL = 'https://upai.usetopscore.com'
 assert CLIENT_ID, 'Need to set UPAI_CLIENT_ID envvar'
 assert CLIENT_SECRET, 'Need to set UPAI_CLIENT_SECRET envvar'
@@ -18,7 +18,7 @@ data = {
 
 }
 
-response = requests.post('{}oauth/server'.format(BASE_URL), data=data)
+response = requests.post('{}/api/oauth/server'.format(BASE_URL), data=data)
 ACCESS_TOKEN= response.json()['access_token']
 header = {'Authorization': 'Bearer {}'.format(ACCESS_TOKEN)}
 
@@ -35,17 +35,16 @@ def get_tournaments(year=None, header=None):
     return tournaments
 
 def get_registrations(event_id=None, header=None):
-    url = '{}{}?&id={}'.format(
-        BASE_URL, '/api/registrations', '113044'
+    url = '{}{}?event_id={}&fields[]=Person&fields[]=Team'.format(
+        BASE_URL, '/api/registrations', event_id
     )
+    print(url)
     r = requests.get(url, headers=header)
     registrations = r.json()['result']
-    print(r.json()['status'])
     return registrations
 
 
 if __name__ == '__main__':
-    year = 2012
-    #tour_events = get_tournaments(None,header) 
-    registrations = get_registrations(None, header)
-    print(registrations)
+    registrations = get_registrations('140982', header)
+    for registration in registrations:
+        print(registration)
