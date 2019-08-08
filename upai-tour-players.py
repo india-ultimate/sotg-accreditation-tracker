@@ -18,7 +18,7 @@ data = {
 
 }
 
-response = requests.post('{}oauth/server'.format(BASE_URL), data=data)
+response = requests.post('{}/api/oauth/server'.format(BASE_URL), data=data)
 ACCESS_TOKEN= response.json()['access_token']
 header = {'Authorization': 'Bearer {}'.format(ACCESS_TOKEN)}
 
@@ -35,17 +35,28 @@ def get_tournaments(year=None, header=None):
     return tournaments
 
 def get_registrations(event_id=None, header=None):
-    url = '{}{}?&id={}'.format(
-        BASE_URL, '/api/registrations', '113044'
+    url = '{}{}?event_id={}&fields=Person'.format(
+        BASE_URL, '/api/registrations', event_id
     )
+    print(url)
     r = requests.get(url, headers=header)
     registrations = r.json()['result']
     print(r.json()['status'])
     return registrations
 
+def get_help_for_endpoint(endpoint=None, header=None):
+    url = '{}{}?endpoint={}'.format(
+            BASE_URL, '/api/help', endpoint
+            )
+    print(url)
+    r = requests.get(url, headers=header)
+    print('status:', r.json()['status'])
+    print('result:', r.json()['result'])
 
 if __name__ == '__main__':
     year = 2012
     #tour_events = get_tournaments(None,header) 
-    registrations = get_registrations(None, header)
+    registrations = get_registrations('140982', header)
     print(registrations)
+    #get_help_for_endpoint('/api/registrations', header)
+    #print(tour_events)
