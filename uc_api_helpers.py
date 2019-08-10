@@ -36,9 +36,7 @@ def get_tournaments(year=None, header=None):
         set_header_access_token()
         header = HEADER
 
-    URL = "{}{}?&per_page=100&order_by=date_desc".format(
-        BASE_URL, "/api/events"
-    )
+    url = "{}/api/events?per_page=100&order_by=date_desc".format(BASE_URL)
     r = requests.get(url, headers=header)
     tournaments = r.json()["result"]
     if year is not None:
