@@ -1,0 +1,10 @@
+<h1>UPAI Event List</h1>
+
+<ul>
+    {% for event in events %}
+        <li>
+            {{ event.name }}
+            <a href="//indiaultimate.org/e/{{ event.slug }}">🔗</a>
+        </li>
+    {% endfor %}
+</ul>
