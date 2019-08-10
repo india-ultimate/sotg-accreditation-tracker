@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 
+"""API helpers for Ultimate Central (indiaultimate.org)"""
+
 import requests
 import json
 import os
