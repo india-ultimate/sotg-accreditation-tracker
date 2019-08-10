@@ -2,9 +2,11 @@
 
 """API helpers for Ultimate Central (indiaultimate.org)"""
 
-import requests
 import json
 import os
+
+import requests
+
 
 # Obtain this from https://upai.usetopscore.com/u/oauth-key
 CLIENT_ID = os.getenv("UPAI_CLIENT_ID")
