@@ -15,19 +15,28 @@ BASE_URL = "https://upai.usetopscore.com"
 assert CLIENT_ID, "Need to set UPAI_CLIENT_ID envvar"
 assert CLIENT_SECRET, "Need to set UPAI_CLIENT_SECRET envvar"
 
-data = {
-    "grant_type": "client_credentials",
-    "client_id": CLIENT_ID,
-    "client_secret": CLIENT_SECRET,
-}
+HEADER = {}
 
-response = requests.post("{}/api/oauth/server".format(BASE_URL), data=data)
-ACCESS_TOKEN = response.json()["access_token"]
-header = {"Authorization": "Bearer {}".format(ACCESS_TOKEN)}
+
+def set_header_access_token():
+    data = {
+        "grant_type": "client_credentials",
+        "client_id": CLIENT_ID,
+        "client_secret": CLIENT_SECRET,
+    }
+
+    response = requests.post("{}/api/oauth/server".format(BASE_URL), data=data)
+    access_token = response.json()["access_token"]
+    HEADER["Authorization"] = "Bearer {}".format(access_token)
 
 
 def get_tournaments(year=None, header=None):
-    url = "{}{}?&per_page=100&order_by=date_desc".format(
+    if header is None:
+        # FIXME: Not necessary if access token already fetched
+        set_header_access_token()
+        header = HEADER
+
+    URL = "{}{}?&per_page=100&order_by=date_desc".format(
         BASE_URL, "/api/events"
     )
     r = requests.get(url, headers=header)
@@ -40,6 +49,11 @@ def get_tournaments(year=None, header=None):
 
 
 def get_registrations(event_id=None, header=None):
+    if header is None:
+        # FIXME: Not necessary if access token already fetched
+        set_header_access_token()
+        header = HEADER
+
     url = "{}{}?event_id={}&fields[]=Person&fields[]=Team".format(
         BASE_URL, "/api/registrations", event_id
     )
@@ -50,6 +64,6 @@ def get_registrations(event_id=None, header=None):
 
 
 if __name__ == "__main__":
-    registrations = get_registrations("140982", header)
+    registrations = get_registrations("140982")
     for registration in registrations:
         print(registration)
