@@ -5,7 +5,7 @@
 <ul>
     {% for team in team_list %}
         <li>{{ team.grouper }}
-            <ul>
+            <ol>
                 {% regroup team.list by Person.full_name as person_list %}
                 {% for person in person_list %}
                     <li>
@@ -13,7 +13,7 @@
                         {% for role in person.list %}({{ role.role }}){% endfor %}
                     </li>
                 {% endfor %}
-            </ul>
+            </ol>
         </li>
     {% endfor %}
 </ul>
