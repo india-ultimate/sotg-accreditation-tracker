@@ -52,13 +52,12 @@ def get_registrations(event_id=None, header=None):
         set_header_access_token()
         header = HEADER
 
-    url = "{}{}?event_id={}&fields[]=Person&fields[]=Team".format(
+    url = "{}{}?event_id={}&fields[]=Person&fields[]=Team&per_page=1000".format(
         BASE_URL, "/api/registrations", event_id
     )
-    print(url)
     r = requests.get(url, headers=header)
     registrations = r.json()["result"]
-    return registrations
+    return sorted(registrations, key=lambda x: x["Team"]["name"])
 
 
 if __name__ == "__main__":
