@@ -3,7 +3,7 @@
 <ul>
     {% for event in events %}
         <li>
-            {{ event.name }}
+            <a href="{% url 'event_page' event.id %}">{{ event.name }}</a>
             <a href="//indiaultimate.org/e/{{ event.slug }}">🔗</a>
         </li>
     {% endfor %}

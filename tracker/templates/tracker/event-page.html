@@ -1,0 +1,19 @@
+<h1>Event</h1>
+
+{% regroup registrations by Team.name as team_list %}
+
+<ul>
+    {% for team in team_list %}
+        <li>{{ team.grouper }}
+            <ul>
+                {% regroup team.list by Person.full_name as person_list %}
+                {% for person in person_list %}
+                    <li>
+                        {{ person.grouper }}
+                        {% for role in person.list %}({{ role.role }}){% endfor %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </li>
+    {% endfor %}
+</ul>
