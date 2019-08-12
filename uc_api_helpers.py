@@ -57,7 +57,11 @@ def get_registrations(event_id=None, header=None):
     )
     r = requests.get(url, headers=header)
     registrations = r.json()["result"]
-    return sorted(registrations, key=lambda x: x["Team"]["name"])
+
+    def get_team_name(registration):
+        return registration["Team"]["name"] if registration["Team"] else ""
+
+    return sorted(registrations, key=get_team_name)
 
 
 if __name__ == "__main__":
