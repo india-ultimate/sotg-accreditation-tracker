@@ -16,22 +16,15 @@ HEADERS = {}
 HERE = os.path.dirname(os.path.abspath(__file__))
 
 
-def _set_header_access_token():
-    CLIENT_ID = os.getenv("UPAI_CLIENT_ID")
-    CLIENT_SECRET = os.getenv("UPAI_CLIENT_SECRET")
+def _fake_registration_data():
+    """Return fake data when the user doesn't have access to the API"""
     data = {
-        "grant_type": "client_credentials",
-        "client_id": CLIENT_ID,
-        "client_secret": CLIENT_SECRET,
+        "action": "api_registrations_list",
+        "status": 200,
+        "count": 20,
+        "result": _generate_registrations(),
     }
-    print("Fetching access token")
-    response = requests.post("{}/api/oauth/server".format(BASE_URL), data=data)
-    if response.status_code != 200:
-        print("Could not fetch access token")
-        return
-
-    access_token = response.json()["access_token"]
-    HEADERS["Authorization"] = "Bearer {}".format(access_token)
+    return data
 
 
 def _fetch_registration_data(event_id, retries=2):
@@ -82,15 +75,35 @@ def _generate_registrations(n=20):
     return [get_registration() for _ in range(n)]
 
 
-def _fake_registration_data():
-    """Return fake data when the user doesn't have access to the API"""
+def _set_header_access_token():
+    CLIENT_ID = os.getenv("UPAI_CLIENT_ID")
+    CLIENT_SECRET = os.getenv("UPAI_CLIENT_SECRET")
     data = {
-        "action": "api_registrations_list",
-        "status": 200,
-        "count": 20,
-        "result": _generate_registrations(),
+        "grant_type": "client_credentials",
+        "client_id": CLIENT_ID,
+        "client_secret": CLIENT_SECRET,
     }
-    return data
+    print("Fetching access token")
+    response = requests.post("{}/api/oauth/server".format(BASE_URL), data=data)
+    if response.status_code != 200:
+        print("Could not fetch access token")
+        return
+
+    access_token = response.json()["access_token"]
+    HEADERS["Authorization"] = "Bearer {}".format(access_token)
+
+
+# API Helpers ####
+
+
+def get_registrations(event_id=None):
+    data = _fetch_registration_data(event_id)
+    registrations = data["result"]
+
+    def get_team_name(registration):
+        return registration["Team"]["name"] if registration["Team"] else ""
+
+    return sorted(registrations, key=get_team_name)
 
 
 def get_tournaments(year=None):
@@ -102,16 +115,6 @@ def get_tournaments(year=None):
             t for t in tournaments if t["start"].startswith(str(year))
         ]
     return tournaments
-
-
-def get_registrations(event_id=None):
-    data = _fetch_registration_data(event_id)
-    registrations = data["result"]
-
-    def get_team_name(registration):
-        return registration["Team"]["name"] if registration["Team"] else ""
-
-    return sorted(registrations, key=get_team_name)
 
 
 if __name__ == "__main__":
