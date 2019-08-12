@@ -6,6 +6,8 @@ from django.conf import settings
 
 from uc_api_helpers import get_registrations, get_tournaments
 
+CACHE_TIMEOUT = 60 * 60  # 1 hour
+
 
 def home(request):
     return HttpResponse("Hello, World!")
@@ -23,7 +25,7 @@ def event_page(request, event_id):
     return render(request, "tracker/event-page.html", context)
 
 
-@cache_page(60 * 15)
+@cache_page(CACHE_TIMEOUT)
 def _events_data(request):
     """Unexposed view to cache the tournament data
 
@@ -35,7 +37,7 @@ def _events_data(request):
     return HttpResponse(json.dumps(get_tournaments()))
 
 
-@cache_page(60 * 15)
+@cache_page(CACHE_TIMEOUT)
 def _registrations_data(request, event_id):
     """Unexposed view to cache the registrations data
 
