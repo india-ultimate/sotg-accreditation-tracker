@@ -29,14 +29,9 @@ def set_header_access_token():
     HEADER["Authorization"] = "Bearer {}".format(access_token)
 
 
-def get_tournaments(year=None, header=None):
-    if header is None:
-        # FIXME: Not necessary if access token already fetched
-        set_header_access_token()
-        header = HEADER
-
+def get_tournaments(year=None):
     url = "{}/api/events?per_page=100&order_by=date_desc".format(BASE_URL)
-    r = requests.get(url, headers=header)
+    r = requests.get(url)
     tournaments = r.json()["result"]
     if year is not None:
         tournaments = [
