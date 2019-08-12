@@ -9,16 +9,15 @@ import requests
 
 
 # Obtain this from https://upai.usetopscore.com/u/oauth-key
-CLIENT_ID = os.getenv("UPAI_CLIENT_ID")
-CLIENT_SECRET = os.getenv("UPAI_CLIENT_SECRET")
 BASE_URL = "https://upai.usetopscore.com"
-assert CLIENT_ID, "Need to set UPAI_CLIENT_ID envvar"
-assert CLIENT_SECRET, "Need to set UPAI_CLIENT_SECRET envvar"
-
 HEADER = {}
 
 
 def set_header_access_token():
+    CLIENT_ID = os.getenv("UPAI_CLIENT_ID")
+    CLIENT_SECRET = os.getenv("UPAI_CLIENT_SECRET")
+    assert CLIENT_ID, "Need to set UPAI_CLIENT_ID envvar"
+    assert CLIENT_SECRET, "Need to set UPAI_CLIENT_SECRET envvar"
     data = {
         "grant_type": "client_credentials",
         "client_id": CLIENT_ID,
