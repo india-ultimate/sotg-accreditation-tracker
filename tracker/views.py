@@ -20,8 +20,10 @@ def events(request):
 
 
 def event_page(request, event_id):
+    events = json.loads(_events_data())
+    event = [event for event in events if event["id"] == event_id][0]
     registrations = json.loads(_registrations_data(event_id))
-    context = {"registrations": registrations}
+    context = {"registrations": registrations, "event": event}
     return render(request, "tracker/event-page.html", context)
 
 
