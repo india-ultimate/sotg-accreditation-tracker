@@ -1,7 +1,7 @@
 import json
 
 from django.shortcuts import render, HttpResponse
-from django.views.decorators.cache import cache_page
+from django.core.cache import cache
 from django.conf import settings
 
 from uc_api_helpers import get_registrations, get_tournaments
@@ -14,36 +14,36 @@ def home(request):
 
 
 def events(request):
-    data = json.loads(_events_data(request).content)
+    data = json.loads(_events_data())
     context = {"events": data}
     return render(request, "tracker/event-list.html", context)
 
 
 def event_page(request, event_id):
-    registrations = json.loads(_registrations_data(request, event_id).content)
+    registrations = json.loads(_registrations_data(event_id))
     context = {"registrations": registrations}
     return render(request, "tracker/event-page.html", context)
 
 
-@cache_page(CACHE_TIMEOUT)
-def _events_data(request):
-    """Unexposed view to cache the tournament data
+def _events_data():
+    """Get event data either from the cache or from Ultimate Central"""
 
-    The view is not exposed for users to directly access this data, but only
-    exists for us to be able to piggyback on the Django cache infrastructure to
-    cache the API responses, instead of writing our own caching code.
+    key = "event-list"
+    data = cache.get(key)
+    if not data:
+        data = json.dumps(get_tournaments())
+        cache.set(key, data, CACHE_TIMEOUT)
 
-    """
-    return HttpResponse(json.dumps(get_tournaments()))
+    return data
 
 
-@cache_page(CACHE_TIMEOUT)
-def _registrations_data(request, event_id):
-    """Unexposed view to cache the registrations data
+def _registrations_data(event_id):
+    """Get registration data for an event (cached or fresh from Ultimate Central)"""
 
-    The view is not exposed for users to directly access this data, but only
-    exists for us to be able to piggyback on the Django cache infrastructure to
-    cache the API responses, instead of writing our own caching code.
+    key = "event-registrations-{}".format(event_id)
+    data = cache.get(key)
+    if not data:
+        data = json.dumps(get_registrations(event_id))
+        cache.set(key, data, CACHE_TIMEOUT)
 
-    """
-    return HttpResponse(json.dumps(get_registrations(event_id)))
+    return data
