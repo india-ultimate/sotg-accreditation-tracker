@@ -4,29 +4,93 @@
 
 import json
 import os
+import random
 
+from faker import Faker
 import requests
 
 
 # Obtain this from https://upai.usetopscore.com/u/oauth-key
 BASE_URL = "https://upai.usetopscore.com"
-HEADER = {}
+HEADERS = {}
+HERE = os.path.dirname(os.path.abspath(__file__))
 
 
-def set_header_access_token():
+def _set_header_access_token():
     CLIENT_ID = os.getenv("UPAI_CLIENT_ID")
     CLIENT_SECRET = os.getenv("UPAI_CLIENT_SECRET")
-    assert CLIENT_ID, "Need to set UPAI_CLIENT_ID envvar"
-    assert CLIENT_SECRET, "Need to set UPAI_CLIENT_SECRET envvar"
     data = {
         "grant_type": "client_credentials",
         "client_id": CLIENT_ID,
         "client_secret": CLIENT_SECRET,
     }
-
+    print("Fetching access token")
     response = requests.post("{}/api/oauth/server".format(BASE_URL), data=data)
+    if response.status_code != 200:
+        print("Could not fetch access token")
+        return
+
     access_token = response.json()["access_token"]
-    HEADER["Authorization"] = "Bearer {}".format(access_token)
+    HEADERS["Authorization"] = "Bearer {}".format(access_token)
+
+
+def _fetch_registration_data(event_id, retries=2):
+    """Fetch registration data for the specified event.
+
+    We try to fetch the data once without refreshing the access_token, and on
+    failure, once after refreshing the access token. If we fail after that,
+    random data is used as a response.
+
+    """
+
+    url = "{}{}?event_id={}&fields[]=Person&fields[]=Team&per_page=1000".format(
+        BASE_URL, "/api/registrations", event_id
+    )
+
+    for _ in range(retries):
+        r = requests.get(url, headers=HEADERS)
+        if r.status_code == 200:
+            data = r.json()
+            break
+        elif r.status_code == 403:
+            _set_header_access_token()
+        print("Retrying...")
+    else:
+        data = _fake_registration_data()
+
+    return data
+
+
+def _generate_registrations(n=20):
+    faker = Faker()
+    roles = ["player", "admin", "captain"]
+    teams = [{"name": faker.company()} for _ in range(n // 5)]
+    teams.insert(0, None)
+
+    def get_registration():
+        registration = {
+            # More fields can be added to the dummy data based on
+            # https://upai.usetopscore.com/api/help?endpoint=%2Fapi%2Fregistrations
+            # https://upai.usetopscore.com/api/help?endpoint=%2Fapi%2Fteams
+            # https://upai.usetopscore.com/api/help?endpoint=%2Fapi%2Fpersons
+            "role": random.choice(roles),
+            "Team": random.choice(teams),
+            "Person": {"full_name": faker.name()},
+        }
+        return registration
+
+    return [get_registration() for _ in range(n)]
+
+
+def _fake_registration_data():
+    """Return fake data when the user doesn't have access to the API"""
+    data = {
+        "action": "api_registrations_list",
+        "status": 200,
+        "count": 20,
+        "result": _generate_registrations(),
+    }
+    return data
 
 
 def get_tournaments(year=None):
@@ -40,17 +104,9 @@ def get_tournaments(year=None):
     return tournaments
 
 
-def get_registrations(event_id=None, header=None):
-    if header is None:
-        # FIXME: Not necessary if access token already fetched
-        set_header_access_token()
-        header = HEADER
-
-    url = "{}{}?event_id={}&fields[]=Person&fields[]=Team&per_page=1000".format(
-        BASE_URL, "/api/registrations", event_id
-    )
-    r = requests.get(url, headers=header)
-    registrations = r.json()["result"]
+def get_registrations(event_id=None):
+    data = _fetch_registration_data(event_id)
+    registrations = data["result"]
 
     def get_team_name(registration):
         return registration["Team"]["name"] if registration["Team"] else ""
