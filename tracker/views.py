@@ -9,8 +9,8 @@ from uc_api_helpers import get_registrations, get_tournaments
 CACHE_TIMEOUT = 60 * 60  # 1 hour
 
 
-def home(request):
-    return HttpResponse("Hello, World!")
+def index(request):
+    return render(request, "tracker/index.html")
 
 
 def events(request):
