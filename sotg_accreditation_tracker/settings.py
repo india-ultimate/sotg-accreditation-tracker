@@ -25,7 +25,7 @@ SECRET_KEY = '--n_bnlyu!1m+uctfycvo#p7x#13f$m8i@ae65ugl_fu-=v+%s'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [shrouded-lake-66489.herokuapp.com]
+ALLOWED_HOSTS = [*]
 
 
 # Application definition
