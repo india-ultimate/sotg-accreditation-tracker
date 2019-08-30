@@ -68,7 +68,11 @@ def _generate_registrations(n=20):
             # https://upai.usetopscore.com/api/help?endpoint=%2Fapi%2Fpersons
             "role": random.choice(roles),
             "Team": random.choice(teams),
-            "Person": {"full_name": faker.name()},
+            "Person": {
+                "full_name": faker.name(),
+                "email_address": faker.email(),
+                "slug": faker.slug(),
+            },
         }
         return registration
 
