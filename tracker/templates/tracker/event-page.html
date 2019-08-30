@@ -4,7 +4,11 @@
 
 <ul>
     {% for team in team_list %}
-        <li>{{ team.grouper }}
+        <li>{% if team.grouper %}
+                <a href="{% url 'accreditation_form' event.id team.grouper %}">{{ team.grouper }}</a>
+            {% else %}
+                {{ team.grouper }}
+            {% endif %}
             <ol>
                 {% regroup team.list by Person.full_name as person_list %}
                 {% for person in person_list %}

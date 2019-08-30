@@ -1,10 +1,10 @@
 import json
 
-from django.shortcuts import render, HttpResponse
 from django.core.cache import cache
-from django.conf import settings
+from django.shortcuts import render
 
 from uc_api_helpers import get_registrations, get_tournaments
+from .forms import AccreditationForm
 
 CACHE_TIMEOUT = 60 * 60  # 1 hour
 
@@ -25,6 +25,23 @@ def event_page(request, event_id):
     registrations = json.loads(_registrations_data(event_id))
     context = {"registrations": registrations, "event": event}
     return render(request, "tracker/event-page.html", context)
+
+
+def accreditation_form(request, event_id, team_name):
+    registrations = json.loads(_registrations_data(event_id))
+    team_registrations = [
+        registration for registration in registrations
+        if registration['Team'] is not None and registration['Team']['name'] == team_name
+    ]
+    forms = [
+        AccreditationForm(initial={'name': registration['Person']['full_name'],
+                                   'email': registration['Person']['email_address'],
+                                   'uc_username': registration['Person']['slug'],
+                                   })
+        for registration in team_registrations
+    ]
+    context = {'forms': forms, 'registrations': team_registrations, 'team_name': team_name}
+    return render(request, "tracker/accreditation-form.html", context)
 
 
 def _events_data():

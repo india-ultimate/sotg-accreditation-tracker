@@ -1,0 +1,14 @@
+<h1> Team-wise SOTG Accreditation </h1>
+
+{% if not forms %}
+    <p>No registrations found for {{ team_name }}</p>
+{% else %}
+    <form action="POST">
+        {% csrf_token %}
+        {% for form in forms %}
+        <div>
+            {{ form }}
+        </div>
+        {% endfor %}
+    </form>
+{% endif %}
