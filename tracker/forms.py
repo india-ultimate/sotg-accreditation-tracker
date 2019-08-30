@@ -6,9 +6,16 @@ from tracker.models import Accreditation
 class AccreditationForm(ModelForm):
     class Meta:
         model = Accreditation
-        fields = ['name', 'email', 'type', 'date', 'uc_username', 'wfdf_userid', ]
+        fields = [
+            "name",
+            "email",
+            "type",
+            "date",
+            "uc_username",
+            "wfdf_userid",
+        ]
         widgets = {
-            'name': TextInput(attrs={'readonly': 'readonly'}),
-            'email': TextInput(attrs={'readonly': 'readonly'}),
-            'uc_username': TextInput(attrs={'readonly': 'readonly'}),
+            "name": TextInput(attrs={"readonly": "readonly"}),
+            "email": TextInput(attrs={"readonly": "readonly"}),
+            "uc_username": TextInput(attrs={"readonly": "readonly"}),
         }
