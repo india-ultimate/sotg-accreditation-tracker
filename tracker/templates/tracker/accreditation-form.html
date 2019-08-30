@@ -6,9 +6,10 @@
     <form method="POST">
         {% csrf_token %}
         {% for form in forms %}
-        <div>
-            {{ form }}
-        </div>
+            <div>
+                {{ form }}
+            </div>
         {% endfor %}
+        <input type="submit" value="Submit" />
     </form>
 {% endif %}
