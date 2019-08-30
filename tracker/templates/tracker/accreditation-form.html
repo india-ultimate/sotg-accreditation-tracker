@@ -3,7 +3,7 @@
 {% if not forms %}
     <p>No registrations found for {{ team_name }}</p>
 {% else %}
-    <form action="POST">
+    <form method="POST">
         {% csrf_token %}
         {% for form in forms %}
         <div>
