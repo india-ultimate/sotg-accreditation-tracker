@@ -1,6 +1,10 @@
-from django.forms import ModelForm, TextInput
+from django.forms import ModelForm, TextInput, DateInput as DI
 
 from tracker.models import Accreditation
+
+
+class DateInput(DI):
+    input_type = "date"
 
 
 class AccreditationForm(ModelForm):
@@ -18,4 +22,5 @@ class AccreditationForm(ModelForm):
             "name": TextInput(attrs={"readonly": "readonly"}),
             "email": TextInput(attrs={"readonly": "readonly"}),
             "uc_username": TextInput(attrs={"readonly": "readonly"}),
+            "date": DateInput(),
         }
