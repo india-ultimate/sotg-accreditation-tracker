@@ -29,27 +29,30 @@ def event_page(request, event_id):
 
 def accreditation_form(request, event_id, team_name):
     registrations = json.loads(_registrations_data(event_id))
-    team_registrations = [
-        registration
-        for registration in registrations
-        if registration["Team"] is not None
-        and registration["Team"]["name"] == team_name
-    ]
-    forms = [
-        AccreditationForm(
-            initial={
-                "name": registration["Person"]["full_name"],
-                "email": registration["Person"]["email_address"],
-                "uc_username": registration["Person"]["slug"],
-            }
+
+    team_emails = set()
+    forms = []
+    for registration in registrations:
+        team = registration["Team"]
+        if team is None or team["name"] != team_name:
+            continue
+
+        person = registration["Person"]
+        if person["email_address"] in team_emails:
+            continue
+
+        team_emails.add(person["email_address"])
+        forms.append(
+            AccreditationForm(
+                initial={
+                    "name": person["full_name"],
+                    "email": person["email_address"],
+                    "uc_username": person["slug"],
+                }
+            )
         )
-        for registration in team_registrations
-    ]
-    context = {
-        "forms": forms,
-        "registrations": team_registrations,
-        "team_name": team_name,
-    }
+
+    context = {"forms": forms, "team_name": team_name}
     return render(request, "tracker/accreditation-form.html", context)
 
 
