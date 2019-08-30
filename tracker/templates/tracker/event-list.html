@@ -1,10 +1,14 @@
-<h1>UPAI Event List</h1>
+{% extends "tracker/base.html" %}
 
-<ul>
-    {% for event in events %}
-        <li>
-            <a href="{% url 'event_page' event.id %}">{{ event.name }}</a>
-            <a href="//indiaultimate.org/e/{{ event.slug }}">🔗</a>
-        </li>
-    {% endfor %}
-</ul>
+{% block content %}
+    <h1>UPAI Event List</h1>
+
+    <ul>
+        {% for event in events %}
+            <li>
+                <a href="{% url 'event_page' event.id %}">{{ event.name }}</a>
+                <a href="//indiaultimate.org/e/{{ event.slug }}">🔗</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

@@ -1,3 +1,7 @@
-<h1>UPAI - SOTG Accreditation Tracker</h1>
+{% extends "tracker/base.html" %}
 
-You can find the list of events <a href="{% url 'events' %}">here</a>
+{% block content %}
+    <h1>UPAI - SOTG Accreditation Tracker</h1>
+
+    You can find the list of events <a href="{% url 'events' %}">here</a>
+{% endblock %}
