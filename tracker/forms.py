@@ -1,4 +1,4 @@
-from django.forms import ModelForm, TextInput, DateInput as DI
+from django.forms import ModelForm, TextInput, DateInput as DI, formset_factory
 
 from tracker.models import Accreditation
 
@@ -24,3 +24,6 @@ class AccreditationForm(ModelForm):
             "uc_username": TextInput(attrs={"readonly": "readonly", 'type': 'hidden'}),
             "date": DateInput(),
         }
+
+
+AccreditationFormSet = formset_factory(AccreditationForm, extra=0)
