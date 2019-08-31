@@ -44,13 +44,15 @@ def accreditation_form(request, event_id, team_name):
             if (
                 registration["Team"] is not None
                 and registration["Team"]["name"] == team_name
-        )
+            )
         }
     )
 
-    formset = AccreditationFormSet(initial=[dict(player) for player in team_players])
+    formset = AccreditationFormSet(
+        initial=[dict(player) for player in team_players]
+    )
 
-    context = {"forms": formset , "team_name": team_name}
+    context = {"forms": formset, "team_name": team_name}
     return render(request, "tracker/accreditation-form.html", context)
 
 
