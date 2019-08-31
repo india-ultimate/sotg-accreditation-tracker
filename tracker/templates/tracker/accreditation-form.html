@@ -3,16 +3,12 @@
 {% block content %}
     <h1> Team-wise SOTG Accreditation </h1>
 
-    {% if not forms %}
+    {% if not formset %}
         <p>No registrations found for {{ team_name }}</p>
     {% else %}
         <form method="POST">
             {% csrf_token %}
-            {% for form in forms %}
-                <div>
-                    {{ form }}
-                </div>
-            {% endfor %}
+            {{ formset }}
             <input type="submit" value="Submit" />
         </form>
     {% endif %}
