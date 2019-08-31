@@ -20,7 +20,7 @@ class AccreditationForm(ModelForm):
         ]
         widgets = {
             "name": TextInput(attrs={"readonly": "readonly"}),
-            "email": TextInput(attrs={"readonly": "readonly"}),
-            "uc_username": TextInput(attrs={"readonly": "readonly"}),
+            "email": TextInput(attrs={"readonly": "readonly", 'type': 'hidden'}),
+            "uc_username": TextInput(attrs={"readonly": "readonly", 'type': 'hidden'}),
             "date": DateInput(),
         }
