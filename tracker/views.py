@@ -1,7 +1,9 @@
 import json
 
+from django.contrib.auth import logout
 from django.core.cache import cache
-from django.shortcuts import render
+from django.shortcuts import redirect, render
+from django.urls import reverse
 
 from uc_api_helpers import get_registrations, get_tournaments
 from .forms import AccreditationFormSet
@@ -53,6 +55,11 @@ def accreditation_form(request, event_id, team_name):
     )
     context = {"formset": formset, "team_name": team_name}
     return render(request, "tracker/accreditation-form.html", context)
+
+
+def logout_view(request):
+    logout(request)
+    return redirect(reverse("events"))
 
 
 def _events_data():
