@@ -79,6 +79,25 @@ def _generate_registrations(n=20):
     return [get_registration() for _ in range(n)]
 
 
+def _get_user_access_token(username, password):
+    CLIENT_ID = os.getenv("UPAI_CLIENT_ID")
+    CLIENT_SECRET = os.getenv("UPAI_CLIENT_SECRET")
+    data = {
+        "grant_type": "password",
+        "client_id": CLIENT_ID,
+        "client_secret": CLIENT_SECRET,
+        "username": username,
+        "password": password,
+    }
+    print("Fetching access token")
+    response = requests.post("{}/api/oauth/server".format(BASE_URL), data=data)
+    if response.status_code != 200:
+        print("Could not fetch access token")
+        return
+
+    return response.json()["access_token"]
+
+
 def _set_header_access_token():
     CLIENT_ID = os.getenv("UPAI_CLIENT_ID")
     CLIENT_SECRET = os.getenv("UPAI_CLIENT_SECRET")
@@ -119,6 +138,17 @@ def get_tournaments(year=None):
             t for t in tournaments if t["start"].startswith(str(year))
         ]
     return tournaments
+
+
+def get_user(username, password):
+    access_token = _get_user_access_token(username, password)
+    headers = {"Authorization": "Bearer {}".format(access_token)}
+    url = "{}/api/persons/me".format(BASE_URL)
+    r = requests.get(url, headers=headers)
+    info = r.json()["result"]
+    if not info:
+        return None
+    return info[0]
 
 
 if __name__ == "__main__":

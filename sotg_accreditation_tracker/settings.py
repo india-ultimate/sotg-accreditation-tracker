@@ -98,6 +98,13 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = [
+    "tracker.auth.TopScoreBackend",
+    "django.contrib.auth.backends.ModelBackend",
+]
+
+LOGIN_REDIRECT_URL = "/events"
+
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
