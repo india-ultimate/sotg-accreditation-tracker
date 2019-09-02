@@ -11,6 +11,7 @@ class TopScoreBackend:
         if user_info is None:
             return None
         email, uc_username = user_info["email_address"], user_info["username"]
+        first_name, last_name = user_info["first_name"], user_info["last_name"]
         teams = [team["name"] for team in user_info["teams"]]
         # FIXME: Put the uc_username and teams somewhere in the DB?
         try:
@@ -18,7 +19,9 @@ class TopScoreBackend:
         except User.DoesNotExist:
             # Create a new user. There's no need to set a password we are
             # authenticating against Ultimate Central
-            user = User(username=username)
+            user = User(
+                username=username, first_name=first_name, last_name=last_name
+            )
             user.save()
         return user
 
