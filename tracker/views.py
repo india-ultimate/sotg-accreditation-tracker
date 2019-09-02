@@ -51,8 +51,7 @@ def accreditation_form(request, event_id, team_name):
     formset = AccreditationFormSet(
         initial=[dict(player) for player in team_players]
     )
-
-    context = {"forms": formset, "team_name": team_name}
+    context = {"formset": formset, "team_name": team_name}
     return render(request, "tracker/accreditation-form.html", context)
 
 
