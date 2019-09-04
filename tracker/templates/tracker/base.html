@@ -1,13 +1,30 @@
-<nav>
-    <ul>
-        {% if user.is_authenticated %}
-            <li>Welcome {{ user.first_name }} {{ user.last_name }}</li>
-            <li><a href="{% url 'logout' %}">Logout</a></li>
-        {% endif %}
-        {% if not user.is_authenticated %}
-            <li><a href="{% url 'login' %}">Login</a></li>
-        {% endif %}
-    </ul>
-</nav>
-{% block content %}
-{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+    </head>
+    <body>
+        <nav class="flex items-center justify-between flex-wrap bg-teal-500 p-6">
+            <div class="flex items-center flex-shrink-0 text-white mr-6">
+                <a class="font-semibold text-xl tracking-tight" href="{% url 'index' %}">UPAI SOTG Accreditation Tracker</a>
+            </div>
+            <div class="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
+                {% if user.is_authenticated %}
+                    <div class="block lg:inline-block mb-2 lg:mb-0">
+                        <span class="text-sm py-2 lg:mt-0 lg:px-4 leading-none text-white">Welcome {{ user.first_name }} {{ user.last_name }}</span>
+                    </div>
+                    <div class="block lg:inline-block">
+                        <a class="text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0" href="{% url 'logout' %}">Logout</a>
+                    </div>
+                {% endif %}
+                {% if not user.is_authenticated %}
+                    <a href="{% url 'login' %}" class="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0">Login</a>
+                {% endif %}
+            </div>
+        </nav>
+        <div class="container mx-auto my-10">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </body>
+</html>
