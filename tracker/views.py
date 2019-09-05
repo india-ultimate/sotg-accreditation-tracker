@@ -5,8 +5,9 @@ from django.core.cache import cache
 from django.shortcuts import redirect, render
 from django.urls import reverse
 
+from tracker.models import Accreditation
 from uc_api_helpers import get_registrations, get_tournaments
-from .forms import AccreditationFormSet
+from .forms import accreditationformset_factory
 
 CACHE_TIMEOUT = 60 * 60  # 1 hour
 
@@ -46,13 +47,18 @@ def accreditation_form(request, event_id, team_name):
             if (
                 registration["Team"] is not None
                 and registration["Team"]["name"] == team_name
-            )
+        )
         }
     )
 
-    formset = AccreditationFormSet(
-        initial=[dict(player) for player in team_players]
-    )
+    player_data = [dict(player) for player in team_players]
+    emails = [player['email'] for player in player_data]
+    existing_players = Accreditation.objects.filter(email__in=emails)
+    existing_emails = {player.email for player in existing_players}
+    new_players = [player for player in player_data if player['email'] not in existing_emails]
+    AccreditationFormSet = accreditationformset_factory(len(new_players))
+    # Use a filtered queryset of players in the current team
+    formset = AccreditationFormSet(queryset=existing_players, initial=new_players)
     context = {"formset": formset, "team_name": team_name}
     return render(request, "tracker/accreditation-form.html", context)
 

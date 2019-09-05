@@ -1,4 +1,4 @@
-from django.forms import ModelForm, TextInput, DateInput as DI, formset_factory
+from django.forms import ModelForm, TextInput, DateInput as DI, modelformset_factory
 
 from tracker.models import Accreditation
 
@@ -30,4 +30,7 @@ class AccreditationForm(ModelForm):
         }
 
 
-AccreditationFormSet = formset_factory(AccreditationForm, extra=0)
+def accreditationformset_factory(extra):
+    return modelformset_factory(model=Accreditation, form=AccreditationForm, extra=extra)
+
+
