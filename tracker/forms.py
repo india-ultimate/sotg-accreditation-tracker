@@ -29,6 +29,10 @@ class AccreditationForm(ModelForm):
             "date": DateInput(),
         }
 
+    def has_changed(self):
+        """Return True if mandatory fields have changed."""
+        mandatory_fields = {'date', 'wfdf_userid'}
+        return set(self.changed_data).issuperset(mandatory_fields)
 
 def accreditationformset_factory(extra):
     return modelformset_factory(model=Accreditation, form=AccreditationForm, extra=extra)

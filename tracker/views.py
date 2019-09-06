@@ -59,6 +59,9 @@ def accreditation_form(request, event_id, team_name):
     AccreditationFormSet = accreditationformset_factory(len(new_players))
     # Use a filtered queryset of players in the current team
     formset = AccreditationFormSet(queryset=existing_players, initial=new_players)
+    if request.method == 'POST':
+        formset = AccreditationFormSet(request.POST)
+        formset.save()
     context = {"formset": formset, "team_name": team_name}
     return render(request, "tracker/accreditation-form.html", context)
 
@@ -76,7 +79,6 @@ def _events_data():
     if not data:
         data = json.dumps(get_tournaments())
         cache.set(key, data, CACHE_TIMEOUT)
-
     return data
 
 
