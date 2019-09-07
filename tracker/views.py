@@ -47,19 +47,25 @@ def accreditation_form(request, event_id, team_name):
             if (
                 registration["Team"] is not None
                 and registration["Team"]["name"] == team_name
-        )
+            )
         }
     )
 
     player_data = [dict(player) for player in team_players]
-    emails = [player['email'] for player in player_data]
+    emails = [player["email"] for player in player_data]
     existing_players = Accreditation.objects.filter(email__in=emails)
     existing_emails = {player.email for player in existing_players}
-    new_players = [player for player in player_data if player['email'] not in existing_emails]
+    new_players = [
+        player
+        for player in player_data
+        if player["email"] not in existing_emails
+    ]
     AccreditationFormSet = accreditationformset_factory(len(new_players))
     # Use a filtered queryset of players in the current team
-    formset = AccreditationFormSet(queryset=existing_players, initial=new_players)
-    if request.method == 'POST':
+    formset = AccreditationFormSet(
+        queryset=existing_players, initial=new_players
+    )
+    if request.method == "POST":
         formset = AccreditationFormSet(request.POST)
         formset.save()
     context = {"formset": formset, "team_name": team_name}

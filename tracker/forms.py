@@ -1,4 +1,9 @@
-from django.forms import ModelForm, TextInput, DateInput as DI, modelformset_factory
+from django.forms import (
+    ModelForm,
+    TextInput,
+    DateInput as DI,
+    modelformset_factory,
+)
 
 from tracker.models import Accreditation
 
@@ -31,10 +36,11 @@ class AccreditationForm(ModelForm):
 
     def has_changed(self):
         """Return True if mandatory fields have changed."""
-        mandatory_fields = {'date', 'wfdf_userid'}
+        mandatory_fields = {"date", "wfdf_userid"}
         return set(self.changed_data).issuperset(mandatory_fields)
 
+
 def accreditationformset_factory(extra):
-    return modelformset_factory(model=Accreditation, form=AccreditationForm, extra=extra)
-
-
+    return modelformset_factory(
+        model=Accreditation, form=AccreditationForm, extra=extra
+    )
