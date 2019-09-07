@@ -20,6 +20,11 @@ This web-app is developed using Python (3.6) and
 1. Git clone this repo
 1. Install all requirements in the repo using `pip install -r requirements.txt`.
    We recommend using a `virtualenv` for development.
+1. Once you have the requirements installed, you can run the app using `python
+   manage.py runserver`.
+1. To work on some of the login based views, you need to have a local user
+   account if you don't have a Ultimate Central keys set in the environment. You
+   can create a superuser account using `python manage.py createsuperuser`.
 
 ## Deploying changes on Heroku
 Once you have made changes to the local repo, deploying your changes to Heroku
