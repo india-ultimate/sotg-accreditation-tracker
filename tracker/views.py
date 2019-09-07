@@ -1,6 +1,7 @@
 import json
 
 from django.contrib.auth import logout
+from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
 from django.shortcuts import redirect, render
 from django.urls import reverse
@@ -22,6 +23,7 @@ def events(request):
     return render(request, "tracker/event-list.html", context)
 
 
+@login_required
 def event_page(request, event_id):
     events = json.loads(_events_data())
     event = [event for event in events if event["id"] == event_id][0]
@@ -30,6 +32,7 @@ def event_page(request, event_id):
     return render(request, "tracker/event-page.html", context)
 
 
+@login_required
 def accreditation_form(request, event_id, team_name):
     registrations = json.loads(_registrations_data(event_id))
 
