@@ -3,7 +3,9 @@
 {% block content %}
 
     {% if form.errors %}
-        <p>Your username and password didn't match. Please try again.</p>
+        <div class="bg-orange-100 border-orange-500 text-orange-700 p-4" role="alert">
+            <p>Your username and password didn't match. Please try again.</p>
+        </div>
     {% endif %}
 
     {% if next %}
@@ -31,5 +33,28 @@
         <input type="submit" value="login">
         <input type="hidden" name="next" value="{{ next }}">
     </form>
+    <div class="bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md" role="alert">
+        <div class="flex">
+            <div class="py-1"><svg class="fill-current h-6 w-6 text-teal-500 mr-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z"/></svg></div>
+            <div>
+                <p class="font-bold">Login using your <a class="text-blue-500" href="https://indiaultimate.org">indiaultimate.org</a> credentials</p>
+                <p class="text-sm">
+                    We don't save your credentials for indiaultimate.org in our
+                    database. We use it to authenticate against the Ultimate Central
+                    authentication system using their OAuth2 API. You can find the code
+                    for authentication <a class="text-blue-500" href="https://github.com/thatte-idli-kaal-soup/sotg-accreditation-tracker/blob/master/tracker/auth.py">here</a>, in case you are curious.
+                </p>
+                <p class="text-sm">
+                    The implementation of OAuth2 provided by Ultimate Central
+                    requires us to ask for your password, unlike the
+                    authentication you may have used with other providers like
+                    Google, Twitter or Facebook. The API spec provided by
+                    Ultimate Central is <a href="https://docs.google.com/document/d/148SFmTpsdon5xoGpAeNCokrpaPKKOSDtrLNBHOIq5c4/edit#heading=h.px865pu3sfvw" class="text-blue-500">here</a>, in case you'd like to verify.
+                </p>
+            </div>
+        </div>
+    </div>
+
+
 
 {% endblock %}
