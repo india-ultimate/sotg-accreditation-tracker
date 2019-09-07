@@ -60,14 +60,17 @@ def accreditation_form(request, event_id, team_name):
         for player in player_data
         if player["email"] not in existing_emails
     ]
-    AccreditationFormSet = accreditationformset_factory(len(new_players))
-    # Use a filtered queryset of players in the current team
-    formset = AccreditationFormSet(
-        queryset=existing_players, initial=new_players
-    )
     if request.method == "POST":
+        AccreditationFormSet = accreditationformset_factory(extra=0)
         formset = AccreditationFormSet(request.POST)
-        formset.save()
+        if formset.is_valid():
+            formset.save()
+    else:
+        AccreditationFormSet = accreditationformset_factory(len(new_players))
+        # Use a filtered queryset of players in the current team
+        formset = AccreditationFormSet(
+            queryset=existing_players, initial=new_players
+        )
     context = {"formset": formset, "team_name": team_name}
     return render(request, "tracker/accreditation-form.html", context)
 
