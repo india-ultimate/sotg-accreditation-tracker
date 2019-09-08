@@ -25,10 +25,23 @@ def events(request):
 
 @login_required
 def event_page(request, event_id):
+    user = request.user
     events = json.loads(_events_data())
     event = [event for event in events if event["id"] == event_id][0]
     registrations = json.loads(_registrations_data(event_id))
-    context = {"registrations": registrations, "event": event}
+    my_admin_teams = {
+        registration["Team"]["name"]
+        for registration in registrations
+        if (
+            registration["Person"]["email_address"] == user.email
+            and registration["role"] in {"admin", "captain"}
+        )
+    }
+    context = {
+        "registrations": registrations,
+        "event": event,
+        "admin_teams": my_admin_teams,
+    }
     return render(request, "tracker/event-page.html", context)
 
 

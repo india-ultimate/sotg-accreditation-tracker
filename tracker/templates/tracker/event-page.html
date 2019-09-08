@@ -7,7 +7,7 @@
 
     <ul>
         {% for team in team_list %}
-            <li>{% if team.grouper %}
+            <li>{% if team.grouper in admin_teams %}
                 <a href="{% url 'accreditation_form' event.id team.grouper %}">{{ team.grouper }}</a>
             {% else %}
                 {{ team.grouper }}
