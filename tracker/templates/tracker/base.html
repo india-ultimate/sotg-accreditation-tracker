@@ -18,7 +18,7 @@
                     {% endif %}
                     {% if user.is_authenticated %}
                         <li class="nav-item">
-                            <span class="nav-link">Welcome {{ user.first_name }} {{ user.last_name }}</span>
+                            <span class="nav-link disabled">Welcome {{ user.first_name }} {{ user.last_name }}</span>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'logout' %}">Logout</a>
