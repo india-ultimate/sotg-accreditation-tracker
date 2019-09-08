@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "tracker",
+    "crispy_forms",
 ]
 
 MIDDLEWARE = [
@@ -134,3 +135,8 @@ CACHES = {
         "LOCATION": "/var/tmp/django_cache",
     }
 }
+
+# Crispy forms fail loudly!
+CRISPY_FAIL_SILENTLY = True
+
+CRISPY_TEMPLATE_PACK = "bootstrap4"
