@@ -8,7 +8,7 @@ from django.urls import reverse
 
 from tracker.models import Accreditation
 from uc_api_helpers import get_registrations, get_tournaments
-from .forms import accreditationformset_factory
+from .forms import accreditationformset_factory, AccreditationFormSetHelper
 
 CACHE_TIMEOUT = 60 * 60  # 1 hour
 
@@ -63,6 +63,7 @@ def accreditation_form(request, event_id, team_name):
         for player in player_data
         if player["email"] not in existing_emails
     ]
+    helper = AccreditationFormSetHelper()
     if request.method == "POST":
         AccreditationFormSet = accreditationformset_factory(extra=0)
         formset = AccreditationFormSet(request.POST)
@@ -74,7 +75,11 @@ def accreditation_form(request, event_id, team_name):
         formset = AccreditationFormSet(
             queryset=existing_players, initial=new_players
         )
-    context = {"formset": formset, "team_name": team_name}
+    context = {
+        "formset": formset,
+        "team_name": team_name,
+        "formset_helper": helper,
+    }
     return render(request, "tracker/accreditation-form.html", context)
 
 

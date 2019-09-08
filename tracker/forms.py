@@ -61,6 +61,11 @@ def accreditationformset_factory(extra):
     )
 
 
+class AccreditationFormSetHelper(FormHelper):
+    form_tag = False
+    template = "bootstrap4/table_inline_formset.html"
+
+
 class LoginForm(AuthenticationForm):
     def __init__(self, *args, **kwargs):
         super(LoginForm, self).__init__(*args, **kwargs)
