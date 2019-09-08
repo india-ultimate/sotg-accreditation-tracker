@@ -2,8 +2,7 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-    <h1> Team-wise SOTG Accreditation </h1>
-
+    <h1> Accreditations &mdash; {{ team_name }} </h1>
     {% if not formset %}
         <p>No registrations found for {{ team_name }}</p>
     {% else %}
