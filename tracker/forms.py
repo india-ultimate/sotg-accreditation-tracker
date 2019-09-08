@@ -39,7 +39,7 @@ class AccreditationForm(ModelForm):
         }
 
     def has_changed(self):
-        """Return True if mandatory fields have changed, for new forms.
+        """Return True if any non auto filled in fields have changed, for new forms.
 
         This allows users to fill in partially filled-in formset, where only
         information for some players is filled in, and the rest is left blank.
@@ -49,10 +49,10 @@ class AccreditationForm(ModelForm):
         if self.instance.id is not None:
             return bool(self.changed_data)
 
-        # If we are creating a new instance, ensure mandatory fields are filled
-        # in to mark as a changed form. Other forms are ignored as unchanged.
-        mandatory_fields = {"date", "wfdf_userid"}
-        return set(self.changed_data).issuperset(mandatory_fields)
+        # If we are creating a new instance, if any of the fields not filled in
+        # using Ultimate Central data have changed, mark the form as changed
+        non_auto_fields = {"date", "wfdf_userid", "type"}
+        return set(self.changed_data).intersection(non_auto_fields)
 
 
 def accreditationformset_factory(extra):
