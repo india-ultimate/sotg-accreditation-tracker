@@ -31,24 +31,19 @@
     <div class="row">
         <div class="col-3">
         </div>
-        <div class="col-6 alert alert-info" role="alert">
-            <div>
-                <p>
-                    We don't save your credentials for indiaultimate.org in our
-                    database. We use it to authenticate against the Ultimate
-                    Central authentication system using their OAuth2 API. You
-                    can find the code for authentication <a href="https://github.com/thatte-idli-kaal-soup/sotg-accreditation-tracker/blob/master/tracker/auth.py">here</a>, in case you are curious.
-                </p>
-                <p>
-                    The implementation of OAuth2 provided by Ultimate Central
-                    requires us to ask for your password, unlike the
-                    authentication you may have used with other providers like
-                    Google, Twitter or Facebook. The API spec provided by
-                    Ultimate Central is <a href="https://docs.google.com/document/d/148SFmTpsdon5xoGpAeNCokrpaPKKOSDtrLNBHOIq5c4/edit#heading=h.px865pu3sfvw">here</a>, in case you'd like to verify.
-                </p>
+        <div class="col-6">
+            <div class="alert alert-warning text-justify" role="alert">
+                We don't save your <span class="text-muted">indiaultimate.org</span>
+                credentials in our DB. We only use them to authenticate against
+                the Ultimate Central site.
+            </div>
+            <div class="alert alert-info text-justify" role="alert">
+                Ultimate Central has a beta implementation of OAuth2, and
+                requires us to ask for your password, unlike the OAuth2
+                implementations by other providers like Google or Facebook.
+                The API spec provided by Ultimate Central is <a href="https://docs.google.com/document/d/148SFmTpsdon5xoGpAeNCokrpaPKKOSDtrLNBHOIq5c4/edit#heading=h.px865pu3sfvw">here</a>,
+                and our code for authentication is <a href="https://github.com/thatte-idli-kaal-soup/sotg-accreditation-tracker/blob/master/tracker/auth.py">here</a>, in case you are curious.
             </div>
         </div>
     </div>
-
-
 {% endblock %}
