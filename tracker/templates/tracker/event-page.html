@@ -2,23 +2,16 @@
 
 {% block content %}
     <h1>{{ event.name }}</h1>
-
-    {% regroup registrations by Team.name as team_list %}
-
     <ul>
-        {% for team in team_list %}
-            <li>{% if team.grouper in admin_teams %}
-                <a href="{% url 'accreditation_form' event.id team.grouper %}">{{ team.grouper }}</a>
+        {% for team_name, players in registrations_by_team.items %}
+            <li>{% if team_name in admin_teams %}
+                <a href="{% url 'accreditation_form' event.id team_name %}">{{ team_name }}</a>
             {% else %}
-                {{ team.grouper }}
+                {{ team_name }}
             {% endif %}
             <ol>
-                {% regroup team.list by Person.full_name as person_list %}
-                {% for person in person_list %}
-                    <li>
-                        {{ person.grouper }}
-                        {% for role in person.list %}({{ role.role }}){% endfor %}
-                    </li>
+                {% for player, roles in players.items %}
+                    <li>{{ player }} {% for role in roles %}({{role}}){% endfor %}</li>
                 {% endfor %}
             </ol>
             </li>

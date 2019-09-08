@@ -41,10 +41,24 @@ def event_page(request, event_id):
     events = json.loads(_events_data())
     event = [event for event in events if event["id"] == event_id][0]
     registrations = json.loads(_registrations_data(event_id))
+
+    registrations_by_team = dict()
+    for registration in registrations:
+        if registration["Team"] is None:
+            team_name = "No team"
+        else:
+            team_name = registration["Team"]["name"]
+        person_name = registration["Person"]["full_name"]
+
+        team = registrations_by_team.setdefault(team_name, {})
+        player = team.setdefault(person_name, [])
+        player.append(registration["role"])
+
     context = {
         "registrations": registrations,
         "event": event,
         "admin_teams": admin_teams(registrations, request.user.email),
+        "registrations_by_team": registrations_by_team,
     }
     return render(request, "tracker/event-page.html", context)
 
