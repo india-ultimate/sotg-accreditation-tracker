@@ -1,11 +1,10 @@
 {% extends "tracker/base.html" %}
 
 {% block content %}
-    <h1>Event List</h1>
-
-    <ul>
+    <h1>Events</h1>
+    <ul class="list-group list-group-flush">
         {% for event in events %}
-            <li>
+            <li class="list-group-item">
                 <a href="{% url 'event_page' event.id %}">{{ event.name }}</a>
                 <span class="text-muted small">({{ event.start }} &ndash; {{ event.end }})</span>
                 <a href="//indiaultimate.org/e/{{ event.slug }}">🔗</a>
