@@ -49,12 +49,15 @@ def group_registrations_by_team(registrations, accreditations):
     registrations_by_team = dict()
     # {
     #     "ATC": {
-    #         "Alex": {
-    #             "roles": ["player", "admin"],
-    #             "email": "foo@bar.com",
-    #             "accreditation": "Advanced",
+    #         "players": {
+    #             "Alex": {
+    #                 "roles": ["player", "admin"],
+    #                 "email": "foo@bar.com",
+    #                 "accreditation": "Advanced",
+    #             },
+    #             "Mai": {...},
     #         },
-    #         "Mai": {...},
+    #         "stats": {"Standard": 2, "Advanced": 4, "Players": 14},
     #     }
     # }
     for registration in registrations:
@@ -66,13 +69,31 @@ def group_registrations_by_team(registrations, accreditations):
         email = registration["Person"]["email_address"]
 
         team = registrations_by_team.setdefault(team_name, {})
-        player = team.setdefault(person_name, {})
+        players = team.setdefault("players", {})
+        stats = team.setdefault("stats", {})
+        player = players.setdefault(person_name, {})
         roles = player.setdefault("roles", [])
 
         roles.append(registration["role"])
         player["email"] = registration["Person"]["email_address"]
         if email in accreditations:
             player["accreditation"] = accreditations[email].type
+
+    for team_name, team_info in registrations_by_team.items():
+        players = team_info["players"]
+        player_count = len(players)
+        standard_count = advanced_count = 0
+        for _, data in players.items():
+            accreditation = data.get("accreditation")
+            if accreditation == "Standard":
+                standard_count += 1
+            elif accreditation == "Advanced":
+                advanced_count += 1
+        team_info["stats"] = {
+            "Standard": standard_count,
+            "Advanced": advanced_count,
+            "Players": player_count,
+        }
 
     return registrations_by_team
 
@@ -84,14 +105,14 @@ def event_page(request, event_id):
     registrations = json.loads(_registrations_data(event_id))
     emails = [r["Person"]["email_address"] for r in registrations]
     accreditations = {A.email: A for A in get_valid_accreditations(emails)}
-
+    registrations_by_team = group_registrations_by_team(
+        registrations, accreditations
+    )
     context = {
         "registrations": registrations,
         "event": event,
         "admin_teams": admin_teams(registrations, request.user.email),
-        "registrations_by_team": group_registrations_by_team(
-            registrations, accreditations
-        ),
+        "registrations_by_team": registrations_by_team,
     }
     return render(request, "tracker/event-page.html", context)
 

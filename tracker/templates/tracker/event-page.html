@@ -3,16 +3,21 @@
 {% block content %}
     <h1>{{ event.name }}</h1>
     <ul>
-        {% for team_name, players in registrations_by_team.items %}
+        {% for team_name, team_info in registrations_by_team.items %}
             <li>{% if team_name in admin_teams %}
                 <a href="{% url 'accreditation_form' event.id team_name %}">{{ team_name }}</a>
             {% else %}
                 {{ team_name }}
             {% endif %}
+            <ul class="list-inline">
+                {% for key, value in team_info.stats.items %}
+                    <li class="list-inline-item"><span class="text-{% if key == 'Advanced' %}success{% else %}secondary{% endif %}">{{ key }}</span> &ndash; <span>{{ value }}</span></li>
+                {% endfor %}
+            </ul>
             <ol>
-                {% for player_name, data in players.items %}
+                {% for player_name, data in team_info.players.items %}
                     <li>{{ player_name }} {% for role in data.roles %}({{role}}){% endfor %}
-                        <span class="badge badge-{% if data.accreditation == 'Advanced' %}primary{% else %}secondary{% endif %}">{{ data.accreditation }}</span>
+                        <span class="badge badge-{% if data.accreditation == 'Advanced' %}success{% else %}secondary{% endif %}">{{ data.accreditation }}</span>
                     </li>
                 {% endfor %}
             </ol>
