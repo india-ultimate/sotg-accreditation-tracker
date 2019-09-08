@@ -1,5 +1,6 @@
 import datetime
 import json
+from os.path import abspath, dirname, join
 
 import arrow
 from django.contrib.auth import logout
@@ -14,10 +15,20 @@ from uc_api_helpers import get_registrations, get_tournaments
 from .forms import accreditationformset_factory, AccreditationFormSetHelper
 
 CACHE_TIMEOUT = 60 * 60  # 1 hour
+HERE = dirname(abspath(__file__))
 
 
 def index(request):
-    return render(request, "tracker/index.html")
+    readme = join(dirname(HERE), "README.md")
+    with open(readme) as f:
+        text = f.read()
+    sections = text.split("\n## ")
+    for section in sections:
+        if section.startswith("About"):
+            break
+    about = section.lstrip("About").strip()
+    context = dict(about=about)
+    return render(request, "tracker/index.html", context)
 
 
 def events(request):

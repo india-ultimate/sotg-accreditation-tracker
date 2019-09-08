@@ -1,5 +1,10 @@
 {% extends "tracker/base.html" %}
 
 {% block content %}
-    You can find the list of events <a href="{% url 'events' %}">here</a>
+    <div class="jumbotron">
+        <h1 class="display-4">UPAI SOTG Accreditation Tracker</h1>
+        <hr class="my-4">
+        {{ about | safe }}
+        <p>You can find the list of events <a href="{% url 'events' %}">here</a></p>
+    </div>
 {% endblock %}
