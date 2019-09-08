@@ -19,3 +19,6 @@ class Accreditation(models.Model):
     )
     wfdf_userid = models.IntegerField(verbose_name="WFDF user ID", unique=True)
     last_modified_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return "{} - ({}:{})".format(self.name, self.type, self.date)
