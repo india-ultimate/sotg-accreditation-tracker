@@ -10,8 +10,10 @@
                 {{ team_name }}
             {% endif %}
             <ol>
-                {% for player, roles in players.items %}
-                    <li>{{ player }} {% for role in roles %}({{role}}){% endfor %}</li>
+                {% for player_name, data in players.items %}
+                    <li>{{ player_name }} {% for role in data.roles %}({{role}}){% endfor %}
+                        <span class="badge badge-{% if data.accreditation == 'Advanced' %}primary{% else %}secondary{% endif %}">{{ data.accreditation }}</span>
+                    </li>
                 {% endfor %}
             </ol>
             </li>

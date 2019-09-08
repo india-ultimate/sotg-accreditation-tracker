@@ -1,5 +1,7 @@
+import datetime
 import json
 
+import arrow
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
@@ -36,29 +38,60 @@ def admin_teams(registrations, email):
     return my_admin_teams
 
 
-@login_required
-def event_page(request, event_id):
-    events = json.loads(_events_data())
-    event = [event for event in events if event["id"] == event_id][0]
-    registrations = json.loads(_registrations_data(event_id))
+def get_valid_accreditations(emails):
+    valid_after_date = arrow.now().shift(months=-18).date()
+    return Accreditation.objects.filter(
+        email__in=emails, date__gte=valid_after_date
+    )
 
+
+def group_registrations_by_team(registrations, accreditations):
     registrations_by_team = dict()
+    # {
+    #     "ATC": {
+    #         "Alex": {
+    #             "roles": ["player", "admin"],
+    #             "email": "foo@bar.com",
+    #             "accreditation": "Advanced",
+    #         },
+    #         "Mai": {...},
+    #     }
+    # }
     for registration in registrations:
         if registration["Team"] is None:
             team_name = "No team"
         else:
             team_name = registration["Team"]["name"]
         person_name = registration["Person"]["full_name"]
+        email = registration["Person"]["email_address"]
 
         team = registrations_by_team.setdefault(team_name, {})
-        player = team.setdefault(person_name, [])
-        player.append(registration["role"])
+        player = team.setdefault(person_name, {})
+        roles = player.setdefault("roles", [])
+
+        roles.append(registration["role"])
+        player["email"] = registration["Person"]["email_address"]
+        if email in accreditations:
+            player["accreditation"] = accreditations[email].type
+
+    return registrations_by_team
+
+
+@login_required
+def event_page(request, event_id):
+    events = json.loads(_events_data())
+    event = [event for event in events if event["id"] == event_id][0]
+    registrations = json.loads(_registrations_data(event_id))
+    emails = [r["Person"]["email_address"] for r in registrations]
+    accreditations = {A.email: A for A in get_valid_accreditations(emails)}
 
     context = {
         "registrations": registrations,
         "event": event,
         "admin_teams": admin_teams(registrations, request.user.email),
-        "registrations_by_team": registrations_by_team,
+        "registrations_by_team": group_registrations_by_team(
+            registrations, accreditations
+        ),
     }
     return render(request, "tracker/event-page.html", context)
 
