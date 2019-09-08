@@ -1,15 +1,23 @@
 # sotg-accreditation-tracker
 
 ## About
-This web-app is used to track the [WFDF Rules
-Accreditation](https://rules.wfdf.org/accreditation) of players participating in
-the tournaments in India conducted by [UPAI](https://indiaultimate.org/).
-Currently players are required to upload the certificate they recieve from WFDF.
-The team the player is rostered with is fetched from UPAI and will allow players
-and captains to view the all the accreditation status of their current roster.
 
-The current webpage is [here](https://sotg-accreditation-tracker.herokuapp.com/)
-and is showing some dummy information.
+<!-- This section is also displayed in the index view. Use pure HTML here! -->
+
+<p>This webapp is used to track the <a
+href="https://rules.wfdf.org/accreditation">WFDF Rules Accreditation</a> of
+players participating in the tournaments in India conducted by the <a
+href="https://indiaultimate.org">UPAI</a></p>
+
+<p>Captains and Admins of teams can login and upload accreditation information for
+the players participating in a tournament on their team. Each event has a page
+that displays the accreditation status of all players participating in the
+tournament, along with some team-wise statistics. Information for each team's
+players can be filled in by admins in batches, as and when they are able to
+collect information from the players.</p>
+
+<p>Event co-ordinators and SOTG committee can audit the accreditation information
+by looking at each events' page.</p>
 
 ## Basic installation
 This web-app is developed using Python (3.6) and
