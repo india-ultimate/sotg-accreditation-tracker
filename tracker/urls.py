@@ -1,7 +1,7 @@
-from django.contrib.auth import views as auth_views
 from django.urls import path
 
 from . import views
+from .forms import LoginView
 
 urlpatterns = [
     path(r"", views.index, name="index"),
@@ -13,6 +13,6 @@ urlpatterns = [
         name="accreditation_form",
     ),
     # auth
-    path("accounts/login/", auth_views.LoginView.as_view(), name="login"),
+    path("accounts/login/", LoginView.as_view(), name="login"),
     path("accounts/logout/", views.logout_view, name="logout"),
 ]

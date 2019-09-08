@@ -1,3 +1,7 @@
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Submit
+from django.contrib.auth import views as auth_views
+from django.contrib.auth.forms import AuthenticationForm
 from django.forms import (
     ModelForm,
     TextInput,
@@ -55,3 +59,18 @@ def accreditationformset_factory(extra):
     return modelformset_factory(
         model=Accreditation, form=AccreditationForm, extra=extra
     )
+
+
+class LoginForm(AuthenticationForm):
+    def __init__(self, *args, **kwargs):
+        super(LoginForm, self).__init__(*args, **kwargs)
+
+        self.helper = FormHelper(self)
+        self.helper.form_class = "col-6"
+        self.helper.add_input(
+            Submit("login", "Login", css_class="btn btn-primary")
+        )
+
+
+class LoginView(auth_views.LoginView):
+    authentication_form = LoginForm
