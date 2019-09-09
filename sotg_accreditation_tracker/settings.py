@@ -24,6 +24,8 @@ SECRET_KEY = "--n_bnlyu!1m+uctfycvo#p7x#13f$m8i@ae65ugl_fu-=v+%s"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+if "DYNO" in os.environ:
+    DEBUG = False
 
 ALLOWED_HOSTS = ["sotg-accreditation-tracker.herokuapp.com", "localhost"]
 
