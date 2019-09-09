@@ -1,3 +1,4 @@
+from django.core.validators import MinValueValidator
 from django.db import models
 
 
@@ -17,7 +18,8 @@ class Accreditation(models.Model):
         verbose_name="Ultimate Central username",
         unique=True,
     )
-    wfdf_userid = models.IntegerField(verbose_name="WFDF user ID", unique=True)
+    wfdf_userid = models.IntegerField(validators=[MinValueValidator(limit_value=0, message='Please enter valid ID')],
+                                      verbose_name="WFDF user ID", unique=True)
     last_modified_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
