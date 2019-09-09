@@ -1,3 +1,4 @@
+from collections import Counter
 import datetime
 import json
 from os.path import abspath, dirname, join
@@ -167,16 +168,23 @@ def accreditation_form(request, event_id, team_name):
         formset = AccreditationFormSet(request.POST)
         if formset.is_valid():
             formset.save()
+        existing_players = Accreditation.objects.filter(email__in=emails)
     else:
         AccreditationFormSet = accreditationformset_factory(len(new_players))
         # Use a filtered queryset of players in the current team
         formset = AccreditationFormSet(
             queryset=existing_players, initial=new_players
         )
+
+    accreditations = existing_players.values_list("type", flat=True)
+    stats = Counter(accreditations)
+    stats.update({"Players": len(emails)})
+
     context = {
         "formset": formset,
         "team_name": team_name,
         "formset_helper": helper,
+        "stats": dict(stats),
     }
     return render(request, "tracker/accreditation-form.html", context)
 

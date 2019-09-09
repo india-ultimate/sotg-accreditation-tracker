@@ -6,6 +6,11 @@
     {% if not formset %}
         <p>No registrations found for {{ team_name }}</p>
     {% else %}
+        <ul class="list-inline">
+            {% for key, value in stats.items %}
+                <li class="list-inline-item"><span class="text-{% if key == 'Advanced' %}success{% else %}secondary{% endif %}">{{ key }}</span> &ndash; <span>{{ value }}</span></li>
+            {% endfor %}
+        </ul>
         <form method="POST">
             {% crispy formset formset_helper %}
             <div class="form-actions">
