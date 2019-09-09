@@ -4,6 +4,7 @@ import json
 from os.path import abspath, dirname, join
 
 import arrow
+from django.conf import settings
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
@@ -39,7 +40,7 @@ def events(request):
 
 
 def admin_teams(registrations, user):
-    if user.is_superuser:
+    if user.is_superuser or settings.DEMO_MODE:
         admin_teams = {
             registration["Team"]["name"]
             for registration in registrations

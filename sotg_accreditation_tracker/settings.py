@@ -144,3 +144,6 @@ CACHES = {
 CRISPY_FAIL_SILENTLY = True
 
 CRISPY_TEMPLATE_PACK = "bootstrap4"
+
+# Add a flag to turn on/off DEMO mode
+DEMO_MODE = "DEMO" in os.environ
