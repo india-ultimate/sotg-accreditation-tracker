@@ -1,5 +1,7 @@
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
+from datetime import date
+
 
 
 class Accreditation(models.Model):
@@ -11,7 +13,8 @@ class Accreditation(models.Model):
     type = models.CharField(
         choices=TYPE_CHOICES, default=STANDARD, max_length=8, blank=False
     )
-    date = models.DateField(verbose_name="Accreditation Date")
+    date = models.DateField(validators=[MaxValueValidator(limit_value=date.today(), message='Please enter valid date')],
+                            verbose_name="Accreditation Date")
     uc_username = models.CharField(
         max_length=50,
         blank=False,
