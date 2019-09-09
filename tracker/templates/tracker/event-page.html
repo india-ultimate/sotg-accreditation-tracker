@@ -2,6 +2,11 @@
 
 {% block content %}
     <h1>{{ event.name }}</h1>
+    <ul class="list-inline">
+        <li class="list-inline-item badge badge-secondary">{{ registrations_by_team|length }} Teams</li>
+        <li class="list-inline-item badge badge-secondary">{{ event.start }} &ndash; {{ event.end }}</li>
+        <li class="list-inline-item badge"><a href="//indiaultimate.org/e/{{ event.slug }}/teams">🔗</a></li>
+    </ul>
     <ul>
         {% for team_name, team_info in registrations_by_team.items %}
             <li>{% if team_name in admin_teams %}
