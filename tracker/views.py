@@ -38,16 +38,25 @@ def events(request):
     return render(request, "tracker/event-list.html", context)
 
 
-def admin_teams(registrations, email):
-    my_admin_teams = {
-        registration["Team"]["name"]
-        for registration in registrations
-        if (
-            registration["Person"]["email_address"] == email
-            and registration["role"] in {"admin", "captain"}
-        )
-    }
-    return my_admin_teams
+def admin_teams(registrations, user):
+    if user.is_superuser:
+        admin_teams = {
+            registration["Team"]["name"]
+            for registration in registrations
+            if registration["Team"]
+        }
+    else:
+        admin_roles = {"admin", "captain"}
+        admin_teams = {
+            registration["Team"]["name"]
+            for registration in registrations
+            if (
+                registration["Team"] is not None
+                and registration["Person"]["email_address"] == user.email
+                and registration["role"] in admin_roles
+            )
+        }
+    return admin_teams
 
 
 def get_valid_accreditations(emails):
@@ -123,7 +132,7 @@ def event_page(request, event_id):
     context = {
         "registrations": registrations,
         "event": event,
-        "admin_teams": admin_teams(registrations, request.user.email),
+        "admin_teams": admin_teams(registrations, request.user),
         "registrations_by_team": registrations_by_team,
     }
     return render(request, "tracker/event-page.html", context)
@@ -132,7 +141,7 @@ def event_page(request, event_id):
 @login_required
 def accreditation_form(request, event_id, team_name):
     registrations = json.loads(_registrations_data(event_id))
-    if team_name not in admin_teams(registrations, request.user.email):
+    if team_name not in admin_teams(registrations, request.user):
         raise PermissionDenied
 
     def extract_info(person):
