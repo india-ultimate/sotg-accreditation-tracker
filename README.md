@@ -9,15 +9,15 @@ href="https://rules.wfdf.org/accreditation">WFDF Rules Accreditation</a> of
 players participating in the tournaments in India conducted by the <a
 href="https://indiaultimate.org">UPAI</a></p>
 
-<p>Captains and Admins of teams can login and upload accreditation information for
-the players participating in a tournament on their team. Each event has a page
-that displays the accreditation status of all players participating in the
-tournament, along with some team-wise statistics. Information for each team's
-players can be filled in by admins in batches, as and when they are able to
-collect information from the players.</p>
+<p>Captains and Admins of teams can login using their India Ultimate login
+credentials and upload accreditation information for the players participating
+in a tournament on their team. Admins can fill-in the information in batches, as
+and when they are able to collect information from the players.</p>
 
-<p>Event co-ordinators and SOTG committee can audit the accreditation information
-by looking at each events' page.</p>
+<p>Each event has a page that displays the accreditation status of all players
+participating in the tournament, along with some team-wise statistics. Event
+co-ordinators and SOTG committee can audit the accreditation information by
+looking at each events' page.</p>
 
 ## Basic installation
 This web-app is developed using Python (3.6) and
