@@ -47,6 +47,8 @@ def _fetch_registration_data(event_id, retries=2):
             break
         elif r.status_code == 403:
             _set_header_access_token()
+        else:
+            print("Response: {}".format(r))
         print("Retrying...")
     else:
         data = _fake_registration_data()
