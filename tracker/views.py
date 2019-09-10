@@ -1,5 +1,4 @@
 from collections import Counter
-import datetime
 import json
 from os.path import abspath, dirname, join
 
