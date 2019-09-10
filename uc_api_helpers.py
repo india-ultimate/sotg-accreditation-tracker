@@ -51,7 +51,11 @@ def _fetch_registration_data(event_id, retries=2):
             print("Response: {}".format(r))
         print("Retrying...")
     else:
-        data = _fake_registration_data()
+        data = (
+            _fake_registration_data()
+            if "NO_FAKE_DATA" not in os.environ
+            else {"result": []}
+        )
 
     return data
 
