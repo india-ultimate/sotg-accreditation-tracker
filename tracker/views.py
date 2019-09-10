@@ -226,7 +226,8 @@ def _events_data():
     data = cache.get(key)
     if not data:
         data = json.dumps(get_tournaments())
-        cache.set(key, data, CACHE_TIMEOUT)
+        if data:
+            cache.set(key, data, CACHE_TIMEOUT)
     return data
 
 
@@ -236,7 +237,9 @@ def _registrations_data(event_id):
     key = "event-registrations-{}".format(event_id)
     data = cache.get(key)
     if not data:
-        data = json.dumps(get_registrations(event_id))
-        cache.set(key, data, CACHE_TIMEOUT)
+        obj = get_registrations(event_id)
+        data = json.dumps(obj)
+        if obj:
+            cache.set(key, data, CACHE_TIMEOUT)
 
     return data
