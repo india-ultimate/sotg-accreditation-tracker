@@ -171,24 +171,40 @@ def accreditation_form(request, event_id, team_name):
         for player in player_data
         if player["email"] not in existing_emails
     ]
+    accreditations = [accreditation.type for accreditation in existing_players]
+    stats = Counter(accreditations)
+    stats.update({"Players": len(emails)})
     helper = AccreditationFormSetHelper()
     if request.method == "POST":
         AccreditationFormSet = accreditationformset_factory(extra=0)
         formset = AccreditationFormSet(request.POST)
-        if formset.is_valid():
+        if not formset.is_valid():
+            context = {
+                "formset": formset,
+                "team_name": team_name,
+                "formset_helper": helper,
+                "stats": dict(stats),
+            }
+            return context
+        else:
             formset.save()
-        existing_players = Accreditation.objects.filter(email__in=emails)
-    else:
-        AccreditationFormSet = accreditationformset_factory(len(new_players))
-        # Use a filtered queryset of players in the current team
-        formset = AccreditationFormSet(
-            queryset=existing_players, initial=new_players
-        )
+            existing_players = Accreditation.objects.filter(email__in=emails)
+            existing_emails = {player.email for player in existing_players}
+            new_players = [
+                player
+                for player in player_data
+                if player["email"] not in existing_emails
+            ]
+            accreditations = [
+                accreditation.type for accreditation in existing_players
+            ]
+            stats = Counter(accreditations)
+            stats.update({"Players": len(emails)})
 
-    accreditations = existing_players.values_list("type", flat=True)
-    stats = Counter(accreditations)
-    stats.update({"Players": len(emails)})
-
+    AccreditationFormSet = accreditationformset_factory(len(new_players))
+    formset = AccreditationFormSet(
+        queryset=existing_players, initial=new_players
+    )
     context = {
         "formset": formset,
         "team_name": team_name,
