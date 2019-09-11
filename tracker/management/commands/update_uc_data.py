@@ -11,11 +11,7 @@ class Command(BaseCommand):
     help = "Update the caches with Ultimate Central data"
 
     def handle(self, *args, **options):
-        print("Updating tournament data in cache")
         tournaments = get_tournaments()
-        if tournaments:
-            cache.set("event-list", json.dumps(tournaments))
-        print("Saved tournament data to cache")
 
         print("Fetching data for tournaments to cache...")
         now = arrow.utcnow()
@@ -30,3 +26,8 @@ class Command(BaseCommand):
             if registrations:
                 cache.set(key, json.dumps(registrations))
             print("Cached event-{} registrations".format(event_id))
+
+        print("Updating tournament data in cache")
+        if tournaments:
+            cache.set("event-list", json.dumps(tournaments))
+        print("Saved tournament data to cache")
