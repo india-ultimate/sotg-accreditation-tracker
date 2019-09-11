@@ -46,7 +46,7 @@ def admin_teams(registrations, user):
             if registration["Team"]
         }
     else:
-        admin_roles = {"admin", "captain"}
+        admin_roles = {"admin", "captain", "player"}
         admin_teams = {
             registration["Team"]["name"]
             for registration in registrations
