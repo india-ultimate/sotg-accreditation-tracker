@@ -15,7 +15,6 @@ from tracker.models import Accreditation
 from uc_api_helpers import get_registrations, get_tournaments
 from .forms import accreditationformset_factory, AccreditationFormSetHelper
 
-CACHE_TIMEOUT = 60 * 60  # 1 hour
 HERE = dirname(abspath(__file__))
 
 
@@ -228,7 +227,7 @@ def _events_data():
         obj = get_tournaments()
         if obj:
             data = json.dumps(obj)
-            cache.set(key, data, CACHE_TIMEOUT)
+            cache.set(key, data)
     return data
 
 
@@ -241,6 +240,6 @@ def _registrations_data(event_id):
         obj = get_registrations(event_id)
         if obj:
             data = json.dumps(obj)
-            cache.set(key, data, CACHE_TIMEOUT)
+            cache.set(key, data)
 
     return data
