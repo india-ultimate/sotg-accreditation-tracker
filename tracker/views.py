@@ -12,7 +12,6 @@ from django.shortcuts import redirect, render
 from django.urls import reverse
 
 from tracker.models import Accreditation
-from uc_api_helpers import get_registrations, get_tournaments
 from .forms import accreditationformset_factory, AccreditationFormSetHelper
 
 HERE = dirname(abspath(__file__))
@@ -32,7 +31,7 @@ def index(request):
 
 
 def events(request):
-    data = json.loads(_events_data())
+    data = _events_data()
     context = {"events": data}
     return render(request, "tracker/event-list.html", context)
 
@@ -120,9 +119,9 @@ def group_registrations_by_team(registrations, accreditations):
 
 @login_required
 def event_page(request, event_id):
-    events = json.loads(_events_data())
+    events = _events_data()
     event = [event for event in events if event["id"] == event_id][0]
-    registrations = json.loads(_registrations_data(event_id))
+    registrations = _registrations_data(event_id)
     emails = [r["Person"]["email_address"] for r in registrations]
     accreditations = {A.email: A for A in get_valid_accreditations(emails)}
     registrations_by_team = group_registrations_by_team(
@@ -139,7 +138,7 @@ def event_page(request, event_id):
 
 @login_required
 def accreditation_form(request, event_id, team_name):
-    registrations = json.loads(_registrations_data(event_id))
+    registrations = _registrations_data(event_id)
     if team_name not in admin_teams(registrations, request.user):
         raise PermissionDenied
 
@@ -219,27 +218,14 @@ def logout_view(request):
 
 
 def _events_data():
-    """Get event data either from the cache or from Ultimate Central"""
-
+    """Get cached event-list."""
     key = "event-list"
     data = cache.get(key)
-    if not data:
-        obj = get_tournaments()
-        if obj:
-            data = json.dumps(obj)
-            cache.set(key, data)
-    return data
+    return json.loads(cache.get(key)) if data is not None else []
 
 
 def _registrations_data(event_id):
-    """Get registration data for an event (cached or fresh from Ultimate Central)"""
-
+    """Get cached registration data for an event."""
     key = "event-registrations-{}".format(event_id)
     data = cache.get(key)
-    if not data:
-        obj = get_registrations(event_id)
-        if obj:
-            data = json.dumps(obj)
-            cache.set(key, data)
-
-    return data
+    return json.loads(cache.get(key)) if data is not None else []
