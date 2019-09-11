@@ -89,7 +89,7 @@ def group_registrations_by_team(registrations, accreditations):
 
         team = registrations_by_team.setdefault(team_name, {})
         players = team.setdefault("players", {})
-        stats = team.setdefault("stats", {})
+        team.setdefault("stats", {})
         player = players.setdefault(person_name, {})
         roles = player.setdefault("roles", [])
 
