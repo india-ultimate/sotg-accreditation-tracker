@@ -20,14 +20,18 @@ class Command(BaseCommand):
             if end < now:
                 continue
             event_id = tournament["id"]
-            print("Caching event-{} registrations".format(event_id))
-            key = "event-registrations-{}".format(event_id)
-            registrations = get_registrations(event_id)
-            if registrations:
-                cache.set(key, json.dumps(registrations))
-            print("Cached event-{} registrations".format(event_id))
+            self.cache_tournament(event_id)
 
         print("Updating tournament data in cache")
         if tournaments:
             cache.set("event-list", json.dumps(tournaments))
         print("Saved tournament data to cache")
+
+    @staticmethod
+    def cache_tournament(event_id):
+        print("Caching event-{} registrations".format(event_id))
+        key = "event-registrations-{}".format(event_id)
+        registrations = get_registrations(event_id)
+        if registrations:
+            cache.set(key, json.dumps(registrations))
+        print("Cached event-{} registrations".format(event_id))
