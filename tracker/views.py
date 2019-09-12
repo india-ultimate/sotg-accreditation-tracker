@@ -160,23 +160,6 @@ def accreditation_form(request, event_id, team_name):
         }
     )
 
-    player_data = [dict(player) for player in team_players]
-    emails = [player["email"] for player in player_data]
-    existing_players = Accreditation.objects.filter(email__in=emails)
-    existing_emails = {player.email for player in existing_players}
-    new_players = [
-        player
-        for player in player_data
-        if player["email"] not in existing_emails
-    ]
-    valid_after_date = arrow.now().shift(months=-18).date()
-    accreditations = [
-        accreditation.type
-        for accreditation in existing_players
-        if accreditation.date > valid_after_date
-    ]
-    stats = Counter(accreditations)
-    stats.update({"Players": len(emails)})
     helper = AccreditationFormSetHelper()
     if request.method == "POST":
         AccreditationFormSet = accreditationformset_factory(extra=0)
@@ -186,24 +169,29 @@ def accreditation_form(request, event_id, team_name):
                 "formset": formset,
                 "team_name": team_name,
                 "formset_helper": helper,
-                "stats": dict(stats),
+                "stats": {},
             }
             return render(request, "tracker/accreditation-form.html", context)
         else:
             formset.save()
-            existing_players = Accreditation.objects.filter(email__in=emails)
-            existing_emails = {player.email for player in existing_players}
-            new_players = [
-                player
-                for player in player_data
-                if player["email"] not in existing_emails
-            ]
-            accreditations = [
-                accreditation.type for accreditation in existing_players
-            ]
-            stats = Counter(accreditations)
-            stats.update({"Players": len(emails)})
 
+    player_data = [dict(player) for player in team_players]
+    emails = [player["email"] for player in player_data]
+    valid_after_date = arrow.now().shift(months=-18).date()
+    existing_players = Accreditation.objects.filter(email__in=emails)
+    existing_emails = {player.email for player in existing_players}
+    new_players = [
+        player
+        for player in player_data
+        if player["email"] not in existing_emails
+    ]
+    accreditations = [
+        accreditation.type
+        for accreditation in existing_players
+        if accreditation.date > valid_after_date
+    ]
+    stats = Counter(accreditations)
+    stats.update({"Players": len(emails)})
     AccreditationFormSet = accreditationformset_factory(len(new_players))
     formset = AccreditationFormSet(
         queryset=existing_players, initial=new_players
