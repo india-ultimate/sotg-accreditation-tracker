@@ -5,6 +5,7 @@
 import json
 import os
 import random
+from urllib.parse import parse_qsl, urlencode
 
 from faker import Faker
 from requests import Session
@@ -36,14 +37,14 @@ def _fetch_registration_data(event_id, retries=2):
 
     """
 
-    url = "{}{}?event_id={}&fields[]=Person&fields[]=Team&per_page=1000".format(
+    url = "{}{}?event_id={}&fields[]=Person&fields[]=Team&per_page=1000&page=1".format(
         BASE_URL, "/api/registrations", event_id
     )
 
     for _ in range(retries):
         r = session.get(url, headers=HEADERS)
         if r.status_code == 200:
-            data = r.json()
+            data = _fetch_all_data(url, r)
             break
         elif r.status_code == 403:
             _set_header_access_token()
@@ -58,6 +59,35 @@ def _fetch_registration_data(event_id, retries=2):
         )
 
     return data
+
+
+def _fetch_all_data(url, first_response):
+    data = first_response.json()
+    if data["count"] == len(data["result"]):
+        return data
+
+    else:
+        url = _next_page(url)
+        retries = 3
+        while len(data["result"]) < data["count"] and retries > 0:
+            print(url)
+            r = session.get(url, headers=HEADERS)
+            if r.status_code == 200:
+                data["result"].extend(r.json()["result"])
+                url = _next_page(url)
+            else:
+                retries -= 1
+        return data
+
+
+def _next_page(url):
+    """Return URL of the next page."""
+
+    base, qs = url.split("?")
+    parsed = parse_qsl(qs)
+    page = int(dict(parsed)["page"]) + 1
+    parsed = [(key, value if key != "page" else page) for key, value in parsed]
+    return "{}?{}".format(base, urlencode(parsed))
 
 
 def _generate_registrations(n=20):
