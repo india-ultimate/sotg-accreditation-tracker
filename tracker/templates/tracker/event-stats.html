@@ -1,0 +1,22 @@
+<table class="table table-hover table-sm table-dark">
+    <thead>
+        <tr>
+            <th scope="col">Team Name</th>
+            <th scope="col">Standard</th>
+            <th scope="col">Advanced</th>
+            <th scope="col">Players</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for team_name, team_info in registrations_by_team.items %}
+            {% if team_name != "No team" %}
+                <tr>
+                    <th scope="row">{{ team_name }}</th>
+                    <td>{{ team_info.stats.Standard }}</td>
+                    <td>{{ team_info.stats.Advanced }}</td>
+                    <td>{{ team_info.stats.Players }}</td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+    </tbody>
+</table>
