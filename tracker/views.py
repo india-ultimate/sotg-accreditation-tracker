@@ -169,7 +169,12 @@ def accreditation_form(request, event_id, team_name):
         for player in player_data
         if player["email"] not in existing_emails
     ]
-    accreditations = [accreditation.type for accreditation in existing_players]
+    valid_after_date = arrow.now().shift(months=-18).date()
+    accreditations = [
+        accreditation.type
+        for accreditation in existing_players
+        if accreditation.date > valid_after_date
+    ]
     stats = Counter(accreditations)
     stats.update({"Players": len(emails)})
     helper = AccreditationFormSetHelper()
