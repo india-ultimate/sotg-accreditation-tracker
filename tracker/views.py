@@ -183,7 +183,7 @@ def accreditation_form(request, event_id, team_name):
                 "formset_helper": helper,
                 "stats": dict(stats),
             }
-            return context
+            return render(request, "tracker/accreditation-form.html", context)
         else:
             formset.save()
             existing_players = Accreditation.objects.filter(email__in=emails)
