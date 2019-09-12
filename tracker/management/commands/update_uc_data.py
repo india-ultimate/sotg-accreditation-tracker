@@ -15,7 +15,7 @@ class Command(BaseCommand):
 
         print("Fetching data for tournaments to cache...")
         now = arrow.utcnow()
-        for tournament in json.loads(cache.get("event-list")):
+        for tournament in tournaments:
             end = arrow.get(tournament["end"])
             if end < now:
                 continue
