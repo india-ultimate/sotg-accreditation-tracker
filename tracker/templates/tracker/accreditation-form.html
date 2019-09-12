@@ -13,6 +13,25 @@
         </ul>
         <form method="POST">
             {% crispy formset formset_helper %}
+            {% if no_email_players %}
+                <div class="alert alert-warning">
+                    The app uses email addresses to identify users.
+
+                    The following users need to set "Email address" and
+                    "username" in their <a href="https://indiaultimate.org">India Ultimate</a> profile
+                    <ul>
+                        {% for player in no_email_players %}
+                            <li>
+                                {% if player.uc_username %}
+                                    <a href="https://indiaultimate.org/u/{{ player.uc_username }}/edit">{{ player.name }}</a>
+                                {% else %}
+                                    {{ player.name }}
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
             <div class="form-actions">
                 <input type="submit" name="submit" value="Save" class="btn btn-primary" id="submit-save">
             </div>

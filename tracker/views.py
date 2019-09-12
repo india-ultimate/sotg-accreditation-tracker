@@ -183,7 +183,14 @@ def accreditation_form(request, event_id, team_name):
     new_players = [
         player
         for player in player_data
-        if player["email"] not in existing_emails
+        if player["email"]
+        and player["email"] not in existing_emails
+        and player["uc_username"]
+    ]
+    no_email_players = [
+        player
+        for player in player_data
+        if not player["email"] or not player["uc_username"]
     ]
     accreditations = [
         accreditation.type
@@ -201,6 +208,7 @@ def accreditation_form(request, event_id, team_name):
         "team_name": team_name,
         "formset_helper": helper,
         "stats": dict(stats),
+        "no_email_players": no_email_players,
     }
     return render(request, "tracker/accreditation-form.html", context)
 
