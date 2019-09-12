@@ -35,7 +35,7 @@ class AccreditationForm(ModelForm):
             "uc_username": TextInput(
                 attrs={"readonly": "readonly", "type": "hidden"}
             ),
-            "date": DateInput(),
+            "date": DateInput(format="%Y-%m-%d"),
         }
 
     def has_changed(self):
