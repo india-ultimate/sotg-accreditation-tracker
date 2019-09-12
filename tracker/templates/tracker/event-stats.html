@@ -2,8 +2,8 @@
     <thead>
         <tr>
             <th scope="col">Team Name</th>
-            <th scope="col">Standard</th>
             <th scope="col">Advanced</th>
+            <th scope="col">Standard</th>
             <th scope="col">Players</th>
         </tr>
     </thead>
@@ -12,8 +12,8 @@
             {% if team_name != "No team" %}
                 <tr>
                     <th scope="row">{{ team_name }}</th>
-                    <td>{{ team_info.stats.Standard }}</td>
                     <td>{{ team_info.stats.Advanced }}</td>
+                    <td>{{ team_info.stats.Standard }}</td>
                     <td>{{ team_info.stats.Players }}</td>
                 </tr>
             {% endif %}
