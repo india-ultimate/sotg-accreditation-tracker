@@ -7,13 +7,13 @@ import os
 import random
 
 from faker import Faker
-import requests
-
+from requests import Session
 
 # Obtain this from https://upai.usetopscore.com/u/oauth-key
 BASE_URL = "https://upai.usetopscore.com"
 HEADERS = {}
 HERE = os.path.dirname(os.path.abspath(__file__))
+session = Session()
 
 
 def _fake_registration_data():
@@ -41,7 +41,7 @@ def _fetch_registration_data(event_id, retries=2):
     )
 
     for _ in range(retries):
-        r = requests.get(url, headers=HEADERS)
+        r = session.get(url, headers=HEADERS)
         if r.status_code == 200:
             data = r.json()
             break
@@ -96,7 +96,7 @@ def _get_user_access_token(username, password):
         "password": password,
     }
     print("Fetching access token")
-    response = requests.post("{}/api/oauth/server".format(BASE_URL), data=data)
+    response = session.post("{}/api/oauth/server".format(BASE_URL), data=data)
     if response.status_code != 200:
         print("Could not fetch access token")
         return
@@ -113,7 +113,7 @@ def _set_header_access_token():
         "client_secret": CLIENT_SECRET,
     }
     print("Fetching access token")
-    response = requests.post("{}/api/oauth/server".format(BASE_URL), data=data)
+    response = session.post("{}/api/oauth/server".format(BASE_URL), data=data)
     if response.status_code != 200:
         print("Could not fetch access token")
         return
@@ -137,7 +137,7 @@ def get_registrations(event_id=None):
 
 def get_tournaments(year=None):
     url = "{}/api/events?per_page=100&order_by=date_desc".format(BASE_URL)
-    r = requests.get(url)
+    r = session.get(url)
     tournaments = r.json()["result"]
     if year is not None:
         tournaments = [
@@ -150,7 +150,7 @@ def get_user(username, password):
     access_token = _get_user_access_token(username, password)
     headers = {"Authorization": "Bearer {}".format(access_token)}
     url = "{}/api/persons/me".format(BASE_URL)
-    r = requests.get(url, headers=headers)
+    r = session.get(url, headers=headers)
     info = r.json()["result"]
     if not info:
         return None
