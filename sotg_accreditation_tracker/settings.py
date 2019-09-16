@@ -31,6 +31,9 @@ if "DYNO" in os.environ:
 
 ALLOWED_HOSTS = ["sotg-accreditation-tracker.herokuapp.com", "localhost"]
 
+# More security flags
+X_FRAME_OPTIONS = "DENY"
+
 CSRF_COOKIE_SECURE = True
 
 SESSION_COOKIE_SECURE = True
