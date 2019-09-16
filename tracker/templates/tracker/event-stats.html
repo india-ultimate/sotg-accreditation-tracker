@@ -1,4 +1,4 @@
-<table class="table table-hover table-sm table-dark">
+<table class="table table-hover table-sm">
     <thead>
         <tr>
             <th scope="col">Team Name</th>
@@ -11,7 +11,13 @@
         {% for team_name, team_info in registrations_by_team.items %}
             {% if team_name != "No team" %}
                 <tr>
-                    <th scope="row">{{ team_name }}</th>
+                    <th scope="row">
+                        {% if team_name in admin_teams %}
+                            <a href="{% url 'accreditation_form' event.id team_name %}">{{ team_name }}</a>
+                        {% else %}
+                            {{ team_name }}
+                        {% endif %}
+                    </th>
                     <td>{{ team_info.stats.Advanced }}</td>
                     <td>{{ team_info.stats.Standard }}</td>
                     <td>{{ team_info.stats.Players }}</td>
