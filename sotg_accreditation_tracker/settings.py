@@ -31,6 +31,10 @@ if "DYNO" in os.environ:
 
 ALLOWED_HOSTS = ["sotg-accreditation-tracker.herokuapp.com", "localhost"]
 
+CSRF_COOKIE_SECURE = True
+
+SESSION_COOKIE_SECURE = True
+
 if "DYNO" in os.environ:
     # Always redirect to SSL site
     SECURE_SSL_REDIRECT = True
