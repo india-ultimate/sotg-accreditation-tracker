@@ -32,7 +32,15 @@ def index(request):
 
 def events(request):
     data = _events_data()
-    context = {"events": data}
+    today = arrow.now().date()
+    upcoming_events = []
+    past_events = []
+    for event in data:
+        if arrow.get(event["end"]).date() >= today:
+            upcoming_events.append(event)
+        else:
+            past_events.append(event)
+    context = {"upcoming_events": upcoming_events, "past_events": past_events}
     return render(request, "tracker/events.html", context)
 
 

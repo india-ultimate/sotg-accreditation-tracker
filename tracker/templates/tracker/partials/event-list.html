@@ -1,0 +1,9 @@
+<ul class="list-group list-group-flush">
+    {% for event in events %}
+    <li class="list-group-item">
+        <a href="{% url 'event_page' event.id %}">{{ event.name }}</a>
+        <span class="text-muted small">({{ event.start }} &ndash; {{ event.end }})</span>
+        <a href="//indiaultimate.org/e/{{ event.slug }}/teams">🔗</a>
+    </li>
+    {% endfor %}
+</ul>
