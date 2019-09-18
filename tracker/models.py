@@ -20,6 +20,7 @@ class Accreditation(models.Model):
             )
         ],
         verbose_name="Accreditation Date",
+        help_text="Enter date as in the certificate",
     )
     uc_username = models.CharField(
         max_length=50,
