@@ -41,4 +41,8 @@ should be as simple as pushing commits to Heroku via `git push heroku master`
 You can view the current status of your deploy via 'heroku logs --tail'
 
 ## Contributions guidelines
+
 Contributions welcome, please send us a pull request, or raise an issue.
+
+The `sotg-accreditation-tracker` is licensed under the AGPLv3. See the `LICENSE`
+file for more information.
