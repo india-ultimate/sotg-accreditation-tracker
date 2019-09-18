@@ -33,7 +33,7 @@ def index(request):
 def events(request):
     data = _events_data()
     context = {"events": data}
-    return render(request, "tracker/event-list.html", context)
+    return render(request, "tracker/events.html", context)
 
 
 def admin_teams(registrations, user):
