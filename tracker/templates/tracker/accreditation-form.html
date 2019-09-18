@@ -11,6 +11,7 @@
                 <li class="list-inline-item"><span class="text-{% if key == 'Advanced' %}success{% else %}secondary{% endif %}">{{ key }}</span> &ndash; <span>{{ value }}</span></li>
             {% endfor %}
         </ul>
+        <span class="text-muted"><small>* The roster information is updated from India Ultimate every 10 minutes or so. If you made a change to the roster on India Ultimate, please wait for 10 minutes for it to reflect here.</small></span>
         <form method="POST">
             {% crispy formset formset_helper %}
             {% if no_email_players %}
