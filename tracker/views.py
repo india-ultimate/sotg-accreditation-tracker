@@ -169,6 +169,7 @@ def accreditation_form(request, event_id, team_name):
             if (
                 registration["Team"] is not None
                 and registration["Team"]["name"] == team_name
+                and registration["role"] != "admin"
             )
         }
     )
