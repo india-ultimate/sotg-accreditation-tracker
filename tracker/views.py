@@ -99,18 +99,23 @@ def group_registrations_by_team(registrations, accreditations):
         players = team.setdefault("players", {})
         team.setdefault("stats", {})
         player = players.setdefault(person_name, {})
-        roles = player.setdefault("roles", [])
+        roles = player.setdefault("roles", set())
 
-        roles.append(registration["role"])
+        roles.add(registration["role"])
         player["email"] = registration["Person"]["email_address"]
         if email in accreditations:
             player["accreditation"] = accreditations[email].type
 
     for team_name, team_info in registrations_by_team.items():
         players = team_info["players"]
-        player_count = len(players)
+        non_admin_players = {
+            player: data
+            for player, data in players.items()
+            if data["roles"].intersection({"player", "captain"})
+        }
+        player_count = len(non_admin_players)
         standard_count = advanced_count = 0
-        for _, data in players.items():
+        for _, data in non_admin_players.items():
             accreditation = data.get("accreditation")
             if accreditation == "Standard":
                 standard_count += 1
