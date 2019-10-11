@@ -65,8 +65,8 @@ def admin_teams(registrations, user):
     return admin_teams
 
 
-def get_valid_accreditations(emails):
-    valid_after_date = arrow.now().shift(months=-18).date()
+def get_valid_accreditations(emails, event):
+    valid_after_date = arrow.get(event["end"]).shift(months=-18).date()
     return Accreditation.objects.filter(
         email__in=emails, date__gte=valid_after_date
     )
@@ -136,7 +136,9 @@ def event_page(request, event_id):
     event = [event for event in events if event["id"] == event_id][0]
     registrations = _registrations_data(event_id)
     emails = [r["Person"]["email_address"] for r in registrations]
-    accreditations = {A.email: A for A in get_valid_accreditations(emails)}
+    accreditations = {
+        A.email: A for A in get_valid_accreditations(emails, event)
+    }
     registrations_by_team = group_registrations_by_team(
         registrations, accreditations
     )
@@ -152,6 +154,7 @@ def event_page(request, event_id):
 @login_required
 def accreditation_form(request, event_id, team_name):
     registrations = _registrations_data(event_id)
+    event = [event for event in _events_data() if event["id"] == event_id][0]
     if team_name not in admin_teams(registrations, request.user):
         raise PermissionDenied
 
@@ -191,7 +194,6 @@ def accreditation_form(request, event_id, team_name):
 
     player_data = [dict(player) for player in team_players]
     emails = [player["email"] for player in player_data]
-    valid_after_date = arrow.now().shift(months=-18).date()
     existing_players = Accreditation.objects.filter(email__in=emails)
     existing_emails = {player.email for player in existing_players}
     new_players = [
@@ -206,10 +208,9 @@ def accreditation_form(request, event_id, team_name):
         for player in player_data
         if not player["email"] or not player["uc_username"]
     ]
+    valid_accreditations = get_valid_accreditations(emails, event)
     accreditations = [
-        accreditation.type
-        for accreditation in existing_players
-        if accreditation.date > valid_after_date
+        accreditation.type for accreditation in valid_accreditations
     ]
     stats = Counter(accreditations)
     stats.update({"Players": len(emails)})
