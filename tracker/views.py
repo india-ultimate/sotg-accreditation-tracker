@@ -187,6 +187,7 @@ def accreditation_form(request, event_id, team_name):
                 "team_name": team_name,
                 "formset_helper": helper,
                 "stats": {},
+                "event": event,
             }
             return render(request, "tracker/accreditation-form.html", context)
         else:
@@ -224,6 +225,7 @@ def accreditation_form(request, event_id, team_name):
         "formset_helper": helper,
         "stats": dict(stats),
         "no_email_players": no_email_players,
+        "event": event,
     }
     return render(request, "tracker/accreditation-form.html", context)
 

@@ -1,6 +1,7 @@
 {% load crispy_forms_tags %}
 {% load crispy_forms_utils %}
 {% load crispy_forms_field %}
+{% load tracker_tags %}
 
 {% specialspaceless %}
 {% if formset_tag %}
@@ -47,7 +48,7 @@
                 {% include "bootstrap4/errors.html" %}
             {% endif %}
 
-            <tr>
+            <tr class="{{ form.instance | accreditation_validity:event }}">
                 {% for field in form %}
                     {% include 'bootstrap4/field.html' with tag="td" form_show_labels=False %}
                 {% endfor %}
