@@ -72,6 +72,13 @@ def get_valid_accreditations(emails, event):
     )
 
 
+def update_complying(stats):
+    complying = True
+    complying &= stats["Standard"] + stats["Advanced"] == stats["Players"]
+    complying &= stats["Advanced"] * 2 >= stats["Players"]
+    stats["complying"] = complying
+
+
 def group_registrations_by_team(registrations, accreditations):
     registrations_by_team = dict()
     # {
@@ -126,6 +133,7 @@ def group_registrations_by_team(registrations, accreditations):
             "Advanced": advanced_count,
             "Players": player_count,
         }
+        update_complying(team_info["stats"])
 
     return registrations_by_team
 

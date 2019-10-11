@@ -17,7 +17,9 @@
             {% endif %}
             <ul class="list-inline">
                 {% for key, value in team_info.stats.items %}
-                    <li class="list-inline-item"><span class="text-{% if key == 'Advanced' %}success{% else %}secondary{% endif %}">{{ key }}</span> &ndash; <span>{{ value }}</span></li>
+                    {% if key != 'complying' %}
+                        <li class="list-inline-item"><span class="text-{% if key == 'Advanced' %}success{% else %}secondary{% endif %}">{{ key }}</span> &ndash; <span>{{ value }}</span></li>
+                    {% endif %}
                 {% endfor %}
             </ul>
             <ol>

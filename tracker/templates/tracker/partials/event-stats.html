@@ -10,7 +10,7 @@
     <tbody>
         {% for team_name, team_info in registrations_by_team.items %}
             {% if team_name != "No team" %}
-                <tr>
+                <tr class="{% if not team_info.stats.complying %}bg bg-warning{% endif %}">
                     <th scope="row">
                         {% if team_name in admin_teams %}
                             <a href="{% url 'accreditation_form' event.id team_name %}">{{ team_name }}</a>
