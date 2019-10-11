@@ -225,7 +225,7 @@ def accreditation_form(request, event_id, team_name):
     stats.update({"Players": len(emails)})
     AccreditationFormSet = accreditationformset_factory(len(new_players))
     formset = AccreditationFormSet(
-        queryset=existing_players, initial=new_players
+        queryset=existing_players.order_by("name"), initial=new_players
     )
     context = {
         "formset": formset,
