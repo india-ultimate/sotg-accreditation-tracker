@@ -1,5 +1,7 @@
 # sotg-accreditation-tracker
 
+Archived in favor of [The Hub](https://github.com/india-ultimate/hub)
+
 ## About
 
 <!-- This section is also displayed in the index view. Use pure HTML here! -->
